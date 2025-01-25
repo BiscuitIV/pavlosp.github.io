@@ -17,7 +17,7 @@ body {
     display: flex;
     align-items: center;
     flex-direction: row;
-    height: min-content;
+    height: fit-content;
 }
 
 .index-headline {
@@ -138,13 +138,17 @@ p {
 }
 
 .project-information {
+    top: 0;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     background-color: #f3f3f3;
     width: 70%;
-    flex-grow: 1;
+    height: 100vh;
+    position: fixed; 
+    top: 0; 
+    right: 0;
 }
 
 h2{
