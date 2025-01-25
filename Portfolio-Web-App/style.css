@@ -9,6 +9,7 @@ body {
     font-style: normal;
     color: black;
     background-color: #ffffff;
+    scroll-behavior: smooth;
 }
 
 .index-container {
@@ -17,7 +18,6 @@ body {
     display: flex;
     align-items: center;
     flex-direction: row;
-    height: 100vh;
 }
 
 .index-headline {
@@ -28,7 +28,7 @@ body {
     flex-direction: column;
     background-color: #ffffff;
     width: 30%;
-    height: 100%;
+    height: 100vh;
 }
 
 a{
@@ -55,7 +55,7 @@ h1 {
 h1:hover {
     text-decoration: line-through;
     transform: scale(1.1);
-    text-shadow: 0 16px 32px rgba(0, 0, 0, 0.2); 
+    text-shadow: 0 16px 32px rgba(0, 0, 0, 0.6); 
 }
 
 p {
@@ -132,7 +132,10 @@ p {
     flex-direction: column;
     background-color: #f3f3f3;
     width: 70%;
-    height: 100%;
+    height: 100vh;
+    position: fixed; 
+    top: 0; 
+    right: 0;
 }
 
 .project-container {
@@ -190,4 +193,43 @@ p {
 
 .project-link:hover .image-description {
     opacity: 1; 
+}
+
+footer{
+    width: 100%;
+    border-top: 1px solid rgb(200, 200, 200);
+    margin: 0;
+    padding-top: 64px;
+    margin-top: 64px;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 32px;
+}
+
+.footer-text{
+    font-style: italic;
+    color: rgb(200, 200, 200);
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center; 
+    padding-bottom: 16px;
+}
+
+.footer-link{
+    font-family: "Roboto Serif", serif;
+    padding-top: 32px;
+    font-style: italic;
+    color: rgb(13, 71, 105);
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center; 
+    transition: transform 0.3s ease; 
+}
+
+.footer-link:hover{
+    text-decoration: line-through;
+    transform: scale(1.1); 
+    text-shadow: 0 8px 16px rgba(0, 0, 0, 0.6); 
 }
