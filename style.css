@@ -97,7 +97,7 @@ p {
 }
 
 .headline-date:hover {
-    transform: scale(1.1); 
+    transform: scale(1.05); 
     background-color: #f2f2f2; 
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
 }
@@ -144,22 +144,22 @@ p {
     width: 100%;
     justify-content: center;
     align-items: center;
-    position: relative; /* Make the container a positioning context */
+    position: relative; 
 }
 
 .project-link {
-    display: block; /* Make the link a block element */
-    text-decoration: none; /* Remove underline */
-    position: relative; /* Positioning context for the description */
-    width: 80%; /* Match the width of the image */
-    height: 80%; /* Match the height of the image */
-    overflow: hidden; /* Ensure the animation stays within the container */
-    border-radius: 32px; /* Match the image border radius */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+    display: block; 
+    text-decoration: none; 
+    position: relative; 
+    width: 80%; 
+    height: 80%;
+    overflow: hidden; 
+    border-radius: 32px; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
 }
 
 .project-link:hover {
-    transform: scale(1.1); 
+    transform: scale(1.05); 
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
 }
 
