@@ -24,6 +24,8 @@ a {
     margin: 0;
     padding: 0;
     text-decoration: none;
+    justify-content: center;
+    align-self: center;
 }
 
 h1, .h1-project {
@@ -59,7 +61,7 @@ h2 {
     margin: 0;
     padding: 0;
     padding-top: 48px;
-    padding-bottom: 32px;
+    padding-bottom: 64px;
     font-size: 64px;
     font-weight: 500;
     text-align: center;
@@ -171,7 +173,6 @@ p {
 }
 
 .project-information {
-    top: 0;
     margin: 0;
     padding: 0;
     display: flex;
@@ -183,13 +184,14 @@ p {
 }
 
 .project-description-container{
+    margin-top: 1000px;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    align-items: center;
+    width: 80%;
 }
 
 .project-description{
@@ -262,6 +264,8 @@ footer {
     display: flex;
     flex-direction: column;
     padding-bottom: 32px;
+    text-align: center;
+    justify-content: center;
 }
 
 .footer-text {
@@ -283,7 +287,9 @@ footer {
     font-size: 18px;
     font-weight: 500;
     text-align: center;
+    justify-content: center;
     transition: transform 0.3s ease;
+    width: fit-content;
 }
 
 .footer-link:hover {
@@ -294,19 +300,34 @@ footer {
 
 /* Video */
 
+.video-text {
+    font-style: italic;
+    color: rgb(200, 200, 200);
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    position: absolute; 
+    bottom: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
 .video-container {
-    width: 80%; /* Adjust width as needed */
-    height: 80%; /* Adjust height as needed */
+    width: 80%; 
+    height: 80%; 
     border-radius: 32px;
-    overflow: hidden; /* Ensure video doesn't overflow the container */
-    position: absolute; /* Position absolutely within .index-featured */
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Offset to truly center */
+    overflow: hidden; 
+    position: absolute; 
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f3f3f3; /* Optional: Add a background color */
+    background-color: #f3f3f3;
 }
 
 #featured-video {
@@ -316,6 +337,7 @@ footer {
     border-radius: 32px;
     opacity: 0; 
     transition: opacity 0.3s ease; 
+    z-index: 2;
 }
 
 #featured-video.visible {
