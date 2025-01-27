@@ -178,9 +178,11 @@ p {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #f3f3f3;
+    background-color: #ffffff;
     width: 100%;
     height: 100vh;
+    position: relative;
+
 }
 
 .project-description-container{
@@ -192,6 +194,7 @@ p {
     align-items: center;
     justify-content: center;
     width: 60%;
+    row-gap: 16px;
 }
 
 .project-description{
@@ -203,6 +206,8 @@ p {
     justify-content: center;
     align-items: center;
     padding: 0;
+    text-indent: 64px;
+    line-height: 2;
 }
 
 /* Project Container */
