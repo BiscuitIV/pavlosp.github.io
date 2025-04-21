@@ -9,17 +9,12 @@ body {
     font-style: normal;
     color: black;
     background-color: #ffffff;
-    scroll-behavior: smooth;
     overflow-y: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none;
     -webkit-font-smoothing: antialiased;
     opacity: 0;
     animation: fadeIn 1s ease-in forwards;
-}
-
-html{
-    scroll-behavior: smooth;
 }
 
 @keyframes fadeIn {
