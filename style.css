@@ -356,3 +356,5 @@ footer {
 #featured-video.visible {
     opacity: 1;
 }
+
+::-webkit-scrollbar { width: 0px; }
