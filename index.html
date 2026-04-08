@@ -3,66 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Pavlos P</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="index-container">
+    <!-- HOME VIEW (Split Screen) -->
+    <div id="home-view" class="index-container">
         <div class="index-headline">
-            <a href="index.html">
+            <a href="#">
                 <h1>Pavlos P</h1>
             </a>
-            <p class="headline-description">Currently a junior in highschool.</p>
-            <p class="headline-description">3D Printing, CAD, & PCB Design for passion.</p>
+            <p class="headline-description">Currently a senior in highschool.</p>
+            <p class="headline-description">Future Mechanical Engineer.</p>
             <p class="headline-description">Cycling, Gaming, & Game Dev for fun.</p>
-            <div class="headline-date-container">
-                <a class="headline-date" href="canon-r50.html" data-video="">
-                    <p class="project-text">Canon EOS R50</p>
-                    <p class="date-text">2025</p>
-                </a>
-                <a class="headline-date" href="cycling.html" data-video="#">
-                    <p class="project-text">Cycling</p>
-                    <p class="date-text">2024-2025</p>
-                </a>
-                <a class="headline-date" href="glider-plane.html" data-video="2025-01-25 12-26-36.mkv">
-                    <p class="project-text">Glider Plane</p>
-                    <p class="date-text">2024-2025</p>
-                </a>
-                <a class="headline-date" href="#" data-video="#">
-                    <p class="project-text">5 Inch FPV Drone</p>
-                    <p class="date-text">2024</p>
-                </a>
-                <a class="headline-date" href="beeper.html" data-video="#">
-                    <p class="project-text">Beeper</p>
-                    <p class="date-text">2024</p>
-                </a>
-                <a class="headline-date" href="#" data-video="DroneFrameRender0001-0600.mkv">
-                    <p class="project-text">FPV Drone Frame</p>
-                    <p class="date-text">2024</p>
-                </a>
-                <a class="headline-date" href="butterfly.html" data-video="#">
-                    <p class="project-text">Butterfly</p>
-                    <p class="date-text">2023-2024</p>
-                </a>
-                <a class="headline-date" href="ender-3-s1-pro.html" data-video="3D Printer Video.mov">
-                    <p class="project-text">Ender 3 S1 Pro</p>
-                    <p class="date-text">2023</p>
-                </a>
-            </div>
+            
+            <div class="headline-date-container" id="project-links-container"></div>
+
             <footer class="footer">
-                <p class="footer-text">&copy; 2025 Pavlos P. All rights reserved.</p>
-                <a class="footer-link" href="https://linkedin.com/in/pavlos-p-2972b92a2\" target="_blank">LinkedIn</a>
+                <p class="footer-text">&copy; 2026 Pavlos P. All rights reserved.</p>
+                <a class="footer-link" href="https://linkedin.com/in/pavlos-p-2972b92a2" target="_blank">LinkedIn</a>
                 <a class="footer-link" href="mailto:pavlos.paparrizos@gmail.com" target="_blank">Gmail</a>
             </footer>
         </div>
+        
         <div class="index-featured">
             <div class="video-container">
-                <video id="featured-video" autoplay muted loop>
-                </video>
-                <p class="video-text">Hover over project tab to display preview</p>
+                <video id="featured-video" autoplay muted loop playsinline></video>
+                <p class="video-text" id="video-text">Hover over project tab to display preview</p>
             </div>
         </div>
     </div>
+
+    <!-- PROJECT VIEW (Full Screen) -->
+    <div id="project-view" class="project-information" style="display: none;">
+        <div class="project-header">
+            <a href="#" id="back-home-btn" class="back-button">← Back to Projects</a>
+            <h1 class="h1-project">Pavlos P</h1>
+        </div>
+        
+        <h2 id="project-title">Project Title</h2>
+        <div class="project-description-container" id="project-description-container">
+            <!-- JS will inject paragraphs here -->
+        </div>
+        
+        <footer class="footer">
+            <p class="footer-text">&copy; 2026 Pavlos P. All rights reserved.</p>
+            <a class="footer-link" href="https://linkedin.com/in/pavlos-p-2972b92a2" target="_blank">LinkedIn</a>
+            <a class="footer-link" href="mailto:pavlos.paparrizos@gmail.com" target="_blank">Gmail</a>
+        </footer>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
