@@ -223,7 +223,10 @@ summary::-webkit-details-marker { display: none; }
     display: flex;
     flex-direction: column;
     border-left: 1px solid var(--ink);
-    /* Drafting grid: minor lines every cell, major lines every 5 cells */
+}
+
+/* Drafting grid: minor lines every cell, major lines every 5 cells */
+.grid-paper {
     background-color: var(--paper-2);
     background-image:
         linear-gradient(var(--grid-major) 1px, transparent 1px),
@@ -478,6 +481,7 @@ summary::-webkit-details-marker { display: none; }
 
 .project-frame { max-width: 960px; margin-bottom: var(--s-7); }
 .project-frame video { opacity: 1; }
+.project-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 
 .prose { max-width: 62ch; }
 
@@ -488,6 +492,219 @@ summary::-webkit-details-marker { display: none; }
     font-variant-caps: all-small-caps;
     letter-spacing: 0.04em;
 }
+
+/* ---------- Project spec sheet: title-block cells, rules from 1px gaps over ink ---------- */
+.spec-sheet { max-width: 960px; margin-bottom: var(--s-7); }
+
+.spec-groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1px;
+    padding: 1px;
+    background: var(--ink);
+}
+
+/* Growing cells always fill each row, so no ink shows through */
+.spec-group {
+    flex: 1 1 240px;
+    padding: var(--s-3) var(--s-4) var(--s-4);
+    background: var(--paper);
+}
+
+.spec-group-head { margin: 0 0 var(--s-2); color: var(--accent); }
+
+.spec-rows {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--s-1) var(--s-4);
+    align-items: baseline;
+    margin: 0;
+}
+
+.spec-rows dt { color: var(--ink-2); }
+
+/* Labels with symbols and units (ρ, μ, Cl, m/s) must keep their case */
+.spec-rows dt,
+.re-input > span,
+.re-values dt { text-transform: none; }
+
+/* Mono without uppercase so units (mm, mAh, Wh) stay correct */
+.spec-rows dd,
+.legend-data,
+.re-input output,
+.re-values dd {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: var(--t-12);
+    letter-spacing: 0.02em;
+}
+
+.spec-rows dd { text-align: right; }
+
+/* ---------- Project figures ---------- */
+.fig { margin: var(--s-6) 0 var(--s-7); }
+.fig-plate { border: 1px solid var(--ink); padding: var(--s-5); }
+.fig figcaption { margin-top: var(--s-2); color: var(--ink-2); }
+
+/* Airfoil overlay (SVG units are millimetres) */
+.af-plot { display: block; width: 100%; height: auto; overflow: visible; }
+.af-plot path { fill: none; stroke-width: 0.45; stroke-linejoin: round; }
+.af-curr { stroke: var(--accent); }
+.af-prev { stroke: var(--ink-2); stroke-dasharray: 1.6 1; }
+.af-chord { stroke: var(--rule); stroke-width: 0.25; stroke-dasharray: 1 1; }
+.af-tick { stroke: var(--ink); stroke-width: 0.2; }
+
+.af-scale {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--s-1);
+    color: var(--ink-2);
+}
+
+.fig-legend {
+    display: grid;
+    gap: var(--s-2);
+    margin: var(--s-5) 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.fig-legend li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--s-3);
+}
+
+.swatch {
+    width: var(--s-5);
+    align-self: center;
+    border-top: 2px solid var(--accent);
+}
+
+.swatch-dash { border-top: 2px dashed var(--ink-2); }
+.legend-name { font-style: italic; }
+.legend-data { color: var(--ink-2); }
+
+/* Section polars: E205 is the graphite baseline (dashed), FX 60-100 the red current design */
+/* Plain paper: the drafting grid would compete with the chart gridlines */
+.fig-plate.polars { background: var(--paper); }
+
+.fig-legend-row { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); margin: 0 0 var(--s-4); }
+
+.polar-charts { display: grid; gap: var(--s-6); }
+
+.polar-title { margin: 0 0 var(--s-2); color: var(--ink-2); text-transform: none; }
+
+.polar-plot { position: relative; }
+
+.polar-svg {
+    display: block;
+    width: 100%;
+    overflow: visible;
+    touch-action: pan-y;
+    font-family: var(--mono);
+    font-size: var(--t-12);
+}
+
+.polar-grid { stroke: var(--rule); stroke-width: 1; }
+.polar-zero,
+.polar-axis { stroke: var(--ink-2); stroke-width: 1; }
+.polar-tick { fill: var(--ink-2); }
+.polar-label { fill: var(--ink); }
+
+.polar-line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.polar-line.polar-curr { stroke: var(--accent); }
+.polar-line.polar-prev { stroke: var(--ink-2); stroke-dasharray: 6 4; }
+
+.polar-cross { stroke: var(--ink-2); stroke-width: 1; stroke-dasharray: 2 3; }
+.polar-hover circle { stroke: var(--paper); stroke-width: 2; }
+.polar-hover .polar-curr { fill: var(--accent); }
+.polar-hover .polar-prev { fill: var(--ink-2); }
+.polar-hit { fill: transparent; pointer-events: all; cursor: crosshair; }
+
+.polar-tip {
+    position: absolute;
+    z-index: 1;
+    max-width: 260px;
+    padding: var(--s-2) var(--s-3);
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    font-family: var(--mono);
+    font-size: var(--t-12);
+    line-height: 1.5;
+    pointer-events: none;
+}
+
+.polar-tip p { margin: 0; }
+.polar-tip p + p { margin-top: var(--s-1); }
+.polar-tip-name { display: block; font-family: var(--serif); font-size: var(--t-18); font-style: italic; }
+
+.polar-table {
+    width: 100%;
+    margin-top: var(--s-6);
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: var(--t-12);
+}
+
+.polar-table th,
+.polar-table td { padding: var(--s-2) var(--s-2) var(--s-2) 0; text-align: left; border-bottom: 1px solid var(--rule); }
+.polar-table thead th { color: var(--ink-2); font-weight: 400; border-bottom-color: var(--ink); }
+.polar-table tbody th { font-family: var(--serif); font-size: var(--t-18); font-style: italic; font-weight: 400; }
+.polar-at { color: var(--ink-2); }
+
+/* Reynolds calculator */
+.re-eq {
+    margin: 0 0 var(--s-5);
+    font-size: var(--t-24);
+    text-align: center;
+}
+
+.frac {
+    display: inline-flex;
+    flex-direction: column;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 1.3;
+}
+
+.frac > span { padding: 0 var(--s-1); }
+.frac > span + span { border-top: 1px solid currentColor; }
+
+.re-inputs { display: grid; gap: var(--s-3); margin-bottom: var(--s-5); }
+
+.re-input {
+    display: grid;
+    grid-template-columns: 8.5em 1fr 5.5em;
+    align-items: center;
+    gap: var(--s-3);
+}
+
+.re-input > span { color: var(--ink-2); }
+.re-input input { width: 100%; margin: 0; accent-color: var(--accent); }
+.re-input output { text-align: right; }
+
+.re-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1px;
+    margin: 0;
+    padding: 1px;
+    background: var(--ink);
+}
+
+.re-values > div {
+    flex: 1 1 120px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1);
+    padding: var(--s-2) var(--s-3);
+    background: var(--paper);
+}
+
+.re-values dt { color: var(--ink-2); }
+.re-total dd { font-size: var(--t-18); color: var(--accent); }
 
 /* ---------- Narrow screens: panel stacks under the index ---------- */
 @media (max-width: 860px) {
@@ -514,6 +731,10 @@ summary::-webkit-details-marker { display: none; }
     .project-title { padding: var(--s-7) 0 var(--s-6); }
     .project-grid { grid-template-columns: 1fr; gap: var(--s-6); }
     .spec { position: static; }
+
+    .fig-plate { padding: var(--s-4); }
+    .re-input { grid-template-columns: 1fr auto; gap: var(--s-1) var(--s-3); }
+    .re-input input { grid-column: 1 / -1; grid-row: 2; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -135,7 +135,7 @@
             <p class="mono colophon">&copy; 2026 Pavlos P</p>
         </div>
 
-        <section class="panel" aria-label="Project preview">
+        <section class="panel grid-paper" aria-label="Project preview">
             <div class="panel-stage">
                 <div class="frame-wrap" id="frame-wrap">
                     <span class="dim dim-x" aria-hidden="true"><i class="dim-line"></i><span class="dim-label" id="dim-w"></span></span>
@@ -191,7 +191,12 @@
                 <div class="project-content">
                     <div class="frame project-frame" id="project-frame" hidden>
                         <video id="project-video" muted loop playsinline controls></video>
+                        <img id="project-image" alt="Velocity magnitude contour of the Generation X airframe" hidden>
                     </div>
+                    <section class="spec-sheet" id="project-specs" aria-labelledby="specs-head" hidden>
+                        <h3 class="mono section-head" id="specs-head"></h3>
+                        <div class="spec-groups"></div>
+                    </section>
                     <div class="prose" id="project-description-container"></div>
                 </div>
             </div>
