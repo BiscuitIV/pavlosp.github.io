@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
 
-/* GLOBAL STYLES */
 body {
     font-family: "Roboto Serif", serif;
     margin: 0;
@@ -36,7 +35,6 @@ p {
     padding: 0;
 }
 
-/* TYPOGRAPHY */
 h1 {
     font-style: italic;
     margin: 0;
@@ -62,7 +60,6 @@ h2 {
     text-align: center;
 }
 
-/* HOME VIEW (SPLIT LAYOUT) */
 .index-container {
     display: flex;
     flex-direction: row;
@@ -90,7 +87,6 @@ h2 {
     right: 0;
 }
 
-/* LEFT SIDEBAR COMPONENTS */
 .headline-description {
     font-style: italic;
     padding-top: 8px;
@@ -105,7 +101,7 @@ h2 {
     flex-direction: column;
     width: 70%;
     margin-top: 64px;
-    gap: 16px; /* Replaces margin-top on individual items */
+    gap: 16px;
 }
 
 .headline-date {
@@ -132,12 +128,11 @@ h2 {
 
 .date-text {
     font-style: italic;
-    color: #666666; /* UX FIX: Improved contrast from rgb(200,200,200) */
+    color: #666666;
     font-size: 16px;
     padding-right: 32px;
 }
 
-/* RIGHT SIDEBAR (VIDEO) */
 .video-container {
     width: 80%; 
     height: 80%; 
@@ -176,7 +171,6 @@ h2 {
     transition: opacity 0.3s ease;
 }
 
-/* PROJECT VIEW (FULL SCREEN) */
 .project-information {
     display: flex;
     flex-direction: column;
@@ -196,7 +190,7 @@ h2 {
 }
 
 .h1-project {
-    padding: 0; /* Reset padding for the specific view */
+    padding: 0;
 }
 
 .back-button {
@@ -217,14 +211,14 @@ h2 {
     display: flex;
     flex-direction: column;
     width: 90%;
-    max-width: 74ch; /* UX FIX: Perfect line-length for reading */
+    max-width: 74ch;
 }
 
 .project-description {
     font-style: italic;
     font-size: 18px;
-    line-height: 1.5; /* UX FIX: Reduced from 2 to 1.5 for better reading flow */
-    margin-bottom: 24px; /* UX FIX: Using margin instead of text-indent */
+    line-height: 1.5;
+    margin-bottom: 24px;
     text-align: left;
 }
 
@@ -232,7 +226,7 @@ h2 {
 footer {
     width: 100%;
     border-top: 1px solid #eaeaea;
-    margin-top: auto; /* Pushes footer to bottom if content is short */
+    margin-top: auto;
     padding-top: 48px;
     padding-bottom: 32px;
     display: flex;
