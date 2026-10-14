@@ -51,89 +51,227 @@ const projects = {
     }
 };
 
+const contact = [
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/pavlos-paparrizos/" },
+    { label: "Email", href: "mailto:pavlos.paparrizos@gmail.com" }
+];
+
+const projectKeys = Object.keys(projects);
+const drawingNumber = key => String(projectKeys.indexOf(key) + 1).padStart(2, "0");
+
 document.addEventListener("DOMContentLoaded", function () {
-    const container = document.getElementById("project-links-container");
-    const featuredVideo = document.getElementById("featured-video");
-    const videoText = document.getElementById("video-text");
-    
-    const homeView = document.getElementById("home-view");
-    const projectView = document.getElementById("project-view");
-    const backBtn = document.getElementById("back-home-btn");
+    const $ = id => document.getElementById(id);
+
+    const list = $("project-links-container");
+    const homeView = $("home-view");
+    const projectView = $("project-view");
+
+    const frameWrap = $("frame-wrap");
+    const frame = $("frame");
+    const featuredVideo = $("featured-video");
+    const caption = $("video-text");
+    const idleCaption = matchMedia("(hover: hover)").matches ? "Hover a part to preview" : "Tap a part to open";
 
     let videoTimeout;
+    let previewToken = 0;
 
-    // GENERATE LINKS
-    Object.keys(projects).forEach(key => {
+    caption.textContent = idleCaption;
+
+    function clearVideo(video) {
+        video.pause();
+        video.removeAttribute("src");
+        video.load();
+    }
+
+    // CONTACT LINKS (one source for every view)
+    document.querySelectorAll(".contact-links").forEach(el => {
+        contact.forEach(({ label, href }) => {
+            const a = document.createElement("a");
+            a.href = href;
+            a.textContent = label;
+            if (href.startsWith("http")) {
+                a.target = "_blank";
+                a.rel = "noopener";
+            }
+            el.appendChild(a);
+        });
+    });
+
+    // TITLE BLOCK ({ title, no, date }, or null for the idle sheet)
+    function setTitleBlock(info) {
+        $("tb-title").textContent = info ? info.title : "Portfolio index";
+        $("tb-no").textContent = info ? info.no : "00";
+        $("tb-date").textContent = info ? info.date : "2026";
+    }
+
+    // PREVIEW (shared by project rows and resume entries)
+    const card = $("frame-card");
+
+    function activatePanel(info) {
+        ++previewToken;
+        clearTimeout(videoTimeout);
+
+        const { width, height } = frame.getBoundingClientRect();
+        $("dim-w").textContent = Math.round(width);
+        $("dim-h").textContent = Math.round(height);
+        frameWrap.classList.add("is-active");
+        frame.classList.add("has-preview");
+        setTitleBlock(info);
+        featuredVideo.classList.remove("visible");
+    }
+
+    function fillCard(meta, title, body, caption) {
+        $("card-meta").textContent = meta;
+        $("card-title").textContent = title;
+        $("card-body").replaceChildren(body);
+        $("card-caption").textContent = caption;
+    }
+
+    function fillProjectCard(key, excerptText) {
         const proj = projects[key];
+        const excerpt = document.createElement("p");
+        excerpt.className = "card-excerpt";
+        excerpt.textContent = excerptText;
+        fillCard(`Dwg no. ${drawingNumber(key)} · ${proj.date}`, proj.title, excerpt, "No render on file · Open →");
+    }
+
+    function showPreview(key) {
+        const proj = projects[key];
+        activatePanel({ title: proj.title, no: drawingNumber(key), date: proj.date });
+        const token = previewToken;
+        card.hidden = Boolean(proj.video);
+
+        if (!proj.video) {
+            // Strip the <strong> markup from the first paragraph
+            const excerpt = document.createElement("div");
+            excerpt.innerHTML = proj.text[0] || "";
+            fillProjectCard(key, excerpt.textContent);
+            clearVideo(featuredVideo);
+            return;
+        }
+
+        videoTimeout = setTimeout(() => {
+            featuredVideo.src = proj.video;
+            featuredVideo.play()
+                .then(() => {
+                    if (token === previewToken) featuredVideo.classList.add("visible");
+                })
+                .catch(() => {
+                    if (token !== previewToken) return;
+                    // Fall back to the spec card when the browser can't play the file
+                    fillProjectCard(key, "Render unavailable in this browser.");
+                    card.hidden = false;
+                });
+        }, 200);
+    }
+
+    function hidePreview() {
+        ++previewToken;
+        clearTimeout(videoTimeout);
+        frameWrap.classList.remove("is-active");
+        frame.classList.remove("has-preview");
+        featuredVideo.classList.remove("visible");
+        card.hidden = true;
+        setTitleBlock(null);
+
+        videoTimeout = setTimeout(() => clearVideo(featuredVideo), 300);
+    }
+
+    // Resume entry: the row's own body (bullets or description) is the single source for the card
+    function showEntry(entry) {
+        const years = entry.closest("dd").previousElementSibling.textContent;
+        const title = entry.querySelector(".entry-title").textContent;
+        const org = entry.querySelector(".entry-meta");
+
+        activatePanel({ title, no: "—", date: years });
+        fillCard(
+            org ? `${years} · ${org.textContent}` : years,
+            title,
+            entry.querySelector(":scope > :not(summary)").cloneNode(true),
+            entry.open ? "Click row to collapse" : "Click row to expand"
+        );
+        card.hidden = false;
+        clearVideo(featuredVideo);
+    }
+
+    document.querySelectorAll("details.entry").forEach(entry => {
+        const summary = entry.querySelector("summary");
+        entry.addEventListener("mouseenter", () => showEntry(entry));
+        entry.addEventListener("mouseleave", hidePreview);
+        summary.addEventListener("focus", () => showEntry(entry));
+        summary.addEventListener("blur", hidePreview);
+        // Keep the caption's expand/collapse hint in sync while the row is active
+        entry.addEventListener("toggle", () => {
+            if (entry.matches(":hover, :focus-within")) showEntry(entry);
+        });
+    });
+
+    // GENERATE INDEX
+    projectKeys.forEach(key => {
+        const proj = projects[key];
+        const li = document.createElement("li");
         const link = document.createElement("a");
-        link.className = "headline-date";
-        link.href = "#";
-        link.setAttribute("data-video", proj.video);
-        
+        link.className = "part";
+        link.href = `#${key}`;
         link.innerHTML = `
-            <p class="project-text">${proj.title}</p>
-            <p class="date-text">${proj.date}</p>
+            <span class="mono part-no">${drawingNumber(key)}</span>
+            <span class="part-title">${proj.title}</span>
+            <span class="mono part-year">${proj.date}</span>
         `;
 
-        // HOVER LOGIC
-        link.addEventListener("mouseenter", () => {
-            const videoSource = link.getAttribute("data-video");
-            clearTimeout(videoTimeout);
+        link.addEventListener("mouseenter", () => showPreview(key));
+        link.addEventListener("focus", () => showPreview(key));
+        link.addEventListener("mouseleave", hidePreview);
+        link.addEventListener("blur", hidePreview);
 
-            if (videoSource) {
-                featuredVideo.classList.remove("visible");
-                videoText.style.opacity = "0";
-
-                videoTimeout = setTimeout(() => {
-                    featuredVideo.src = videoSource;
-                    featuredVideo.play()
-                        .then(() => featuredVideo.classList.add("visible"))
-                        .catch(err => console.log("Video empty or failed"));
-                }, 200); // slightly faster response
-            }
-        });
-
-        link.addEventListener("mouseleave", () => {
-            clearTimeout(videoTimeout);
-            featuredVideo.classList.remove("visible");
-            videoText.style.opacity = "1";
-
-            videoTimeout = setTimeout(() => {
-                featuredVideo.pause();
-                featuredVideo.src = "";
-            }, 300); 
-        });
-
-        // CLICK LOGIC (Open Project)
-        link.addEventListener("click", (e) => {
-            e.preventDefault();
-            
-            // Populate Data
-            document.getElementById("project-title").innerText = proj.title;
-            const descContainer = document.getElementById("project-description-container");
-            descContainer.innerHTML = "";
-            
-            proj.text.forEach(paragraph => {
-                const p = document.createElement("p");
-                p.className = "project-description";
-                // Changed to innerHTML to allow <strong> tags for scannability
-                p.innerHTML = paragraph; 
-                descContainer.appendChild(p);
-            });
-
-            // Switch Views
-            homeView.style.display = "none";
-            projectView.style.display = "flex";
-            window.scrollTo(0, 0); 
-        });
-
-        container.appendChild(link);
+        li.appendChild(link);
+        list.appendChild(li);
     });
 
-    // BACK BUTTON
-    backBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        projectView.style.display = "none";
-        homeView.style.display = "flex";
-    });
+    // ROUTING (#project-key opens a project, anything else shows the index)
+    const projectVideo = $("project-video");
+
+    function route() {
+        const key = decodeURIComponent(location.hash.slice(1));
+        const proj = projects[key];
+
+        homeView.hidden = Boolean(proj);
+        projectView.hidden = !proj;
+
+        if (!proj) {
+            clearVideo(projectVideo);
+            document.title = "Pavlos P";
+            return;
+        }
+
+        hidePreview();
+        document.title = `${proj.title} · Pavlos P`;
+        $("project-title").textContent = proj.title;
+        $("project-no").textContent = drawingNumber(key);
+        $("spec-no").textContent = drawingNumber(key);
+        $("spec-date").textContent = proj.date;
+        $("spec-render").textContent = proj.video ? "On file" : "None";
+
+        $("project-frame").hidden = !proj.video;
+        if (proj.video) {
+            projectVideo.src = proj.video;
+            projectVideo.play().catch(() => {});
+        } else {
+            clearVideo(projectVideo);
+        }
+
+        const descContainer = $("project-description-container");
+        descContainer.innerHTML = "";
+        proj.text.forEach(paragraph => {
+            const p = document.createElement("p");
+            // innerHTML allows the <strong> lead-ins in the project data
+            p.innerHTML = paragraph;
+            descContainer.appendChild(p);
+        });
+
+        window.scrollTo(0, 0);
+    }
+
+    window.addEventListener("hashchange", route);
+    route();
 });
