@@ -13,8 +13,8 @@
     <div id="home-view" class="sheet">
         <div class="sheet-left">
             <header class="intro">
-                <h1 class="name">Pavlos P</h1>
-                <dl class="bio">
+                <h1 class="title title-display name">Pavlos P</h1>
+                <dl class="kv bio">
                     <dt class="mono">Status</dt><dd>College Freshman</dd>
                     <dt class="mono">Track</dt><dd>Mechanical Engineering</dd>
                     <dt class="mono">Seeking</dt><dd>Summer 2027 internship in aerospace, EV, or mechanical design</dd>
@@ -22,117 +22,141 @@
             </header>
 
             <section aria-labelledby="education-head">
-                <h2 class="mono section-head" id="education-head">Education</h2>
-                <dl class="rows">
-                    <dt class="mono">2026&ndash;30</dt>
-                    <dd>
-                        <span class="entry-title">University of Maryland, College Park</span>
-                        <span class="entry-meta">B.S. Mechanical Engineering</span>
-                    </dd>
-                    <dt class="mono">2026</dt>
-                    <dd>
-                        <span class="entry-title">Design Tech High School @ Oracle</span>
-                        <span class="entry-meta">Redwood City, California &middot; GPA 4.32</span>
-                    </dd>
+                <h2 class="mono muted section-head" id="education-head">Education</h2>
+                <dl class="kv rows">
+                    <div>
+                        <dt class="mono">2026&ndash;30</dt>
+                        <dd>
+                            <span class="title entry-title">University of Maryland, College Park</span>
+                            <span class="muted entry-meta">B.S. Mechanical Engineering</span>
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="mono">2026</dt>
+                        <dd>
+                            <span class="title entry-title">Design Tech High School @ Oracle</span>
+                            <span class="muted entry-meta">Redwood City, California &middot; GPA 4.32</span>
+                        </dd>
+                    </div>
                 </dl>
             </section>
 
-            <!-- Entries: one-line summary; the body previews in the panel on hover and expands inline on click -->
+            <!-- Entries: one-line summary; hovering anywhere on the row previews the body in the panel, clicking the title expands it inline -->
             <section aria-labelledby="experience-head">
-                <h2 class="mono section-head" id="experience-head">Experience</h2>
-                <dl class="rows">
-                    <dt class="mono">2026&ndash;Now</dt>
-                    <dd>
-                        <details class="entry">
-                            <summary><span class="entry-title">Electrical Team Member</span><span class="entry-meta">Terps Racing Electric Vehicle</span></summary>
-                            <ul class="entry-points">
-                                <li>Designing a SolidWorks enclosure for a 4S LFP battery pack powering the low-voltage circuitry</li>
-                                <li>Redesigning HV battery charger to cut required outlets from 3 to 1 and add Raspberry Pi data logging</li>
-                            </ul>
-                        </details>
-                    </dd>
-                    <dt class="mono">2026</dt>
-                    <dd>
-                        <details class="entry">
-                            <summary><span class="entry-title">Summer Camp Assistant</span><span class="entry-meta">Hiller Aviation Museum</span></summary>
-                            <ul class="entry-points">
-                                <li>Ran activities for 20+ campers and assisted instructors in STEM-focused aviation programs</li>
-                            </ul>
-                        </details>
-                    </dd>
-                    <dt class="mono">2025&ndash;26</dt>
-                    <dd>
-                        <details class="entry">
-                            <summary><span class="entry-title">Prototype Engineer</span><span class="entry-meta">Apperture S&agrave;rl &middot; Remote</span></summary>
-                            <ul class="entry-points">
-                                <li>Rebuilt 10+ legacy Rhino models of wearable products as parametric, editable Onshape CAD</li>
-                                <li>Designed toleranced functional parts (bezels, strap clips) for FDM/MSLA printing</li>
-                                <li>Ran MSLA production for 50+ batches end to end, from slicing to inspection</li>
-                                <li>Diagnosed and replaced cracked FEP films to minimize downtime</li>
-                            </ul>
-                        </details>
-                    </dd>
-                    <dt class="mono">2022&ndash;24</dt>
-                    <dd>
-                        <details class="entry">
-                            <summary><span class="entry-title">Head of Mechanical</span><span class="entry-meta">d.Aviation (High School Club)</span></summary>
-                            <ul class="entry-points">
-                                <li>Designed a servo-actuated tennis ball intake and release mechanism; placed 3rd of 12 teams at the 2023 STEM-ED Aero Robotics Competition</li>
-                                <li>Led and trained a 5-person mechanical team; handled field repairs and firmware debugging at competition</li>
-                            </ul>
-                        </details>
-                    </dd>
+                <h2 class="mono muted section-head" id="experience-head">Experience</h2>
+                <dl class="kv rows">
+                    <div>
+                        <dt class="mono">2026&ndash;Now</dt>
+                        <dd>
+                            <details class="entry">
+                                <summary><span class="title link entry-title">Electrical Team Member</span><span class="muted entry-meta">Terps Racing Electric Vehicle</span></summary>
+                                <ul class="entry-points">
+                                    <li>Designing a SolidWorks enclosure for a 4S LFP battery pack powering the low-voltage circuitry</li>
+                                    <li>Redesigning HV battery charger to cut required outlets from 3 to 1 and add Raspberry Pi data logging</li>
+                                </ul>
+                            </details>
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="mono">2026</dt>
+                        <dd>
+                            <details class="entry">
+                                <summary><span class="title link entry-title">Summer Camp Assistant</span><span class="muted entry-meta">Hiller Aviation Museum</span></summary>
+                                <ul class="entry-points">
+                                    <li>Ran activities for 20+ campers and assisted instructors in STEM-focused aviation programs</li>
+                                </ul>
+                            </details>
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="mono">2025&ndash;26</dt>
+                        <dd>
+                            <details class="entry">
+                                <summary><span class="title link entry-title">Prototype Engineer</span><span class="muted entry-meta">Apperture S&agrave;rl &middot; Remote</span></summary>
+                                <ul class="entry-points">
+                                    <li>Rebuilt 10+ legacy Rhino models of wearable products as parametric, editable Onshape CAD</li>
+                                    <li>Designed toleranced functional parts (bezels, strap clips) for FDM/MSLA printing</li>
+                                    <li>Ran MSLA production for 50+ batches end to end, from slicing to inspection</li>
+                                    <li>Diagnosed and replaced cracked FEP films to minimize downtime</li>
+                                </ul>
+                            </details>
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="mono">2022&ndash;24</dt>
+                        <dd>
+                            <details class="entry">
+                                <summary><span class="title link entry-title">Head of Mechanical</span><span class="muted entry-meta">d.Aviation (High School Club)</span></summary>
+                                <ul class="entry-points">
+                                    <li>Designed a servo-actuated tennis ball intake and release mechanism; placed 3rd of 12 teams at the 2023 STEM-ED Aero Robotics Competition</li>
+                                    <li>Led and trained a 5-person mechanical team; handled field repairs and firmware debugging at competition</li>
+                                </ul>
+                            </details>
+                        </dd>
+                    </div>
                 </dl>
             </section>
 
             <section aria-labelledby="skills-head">
-                <h2 class="mono section-head" id="skills-head">Skills</h2>
-                <dl class="rows">
-                    <dt class="mono">CAD</dt>
-                    <dd><ul class="tags"><li class="tag">SolidWorks</li><li class="tag">Onshape</li><li class="tag">KiCad</li></ul></dd>
-                    <dt class="mono">Making</dt>
-                    <dd><ul class="tags"><li class="tag">3D Printing (FDM &amp; MSLA, 500+ hours)</li><li class="tag">Laser Cutting</li><li class="tag">Soldering</li></ul></dd>
-                    <dt class="mono">Code</dt>
-                    <dd><ul class="tags"><li class="tag">MATLAB</li><li class="tag">Arduino IDE</li><li class="tag">Betaflight</li><li class="tag">Claude Code</li></ul></dd>
+                <h2 class="mono muted section-head" id="skills-head">Skills</h2>
+                <dl class="kv rows">
+                    <div>
+                        <dt class="mono">CAD</dt>
+                        <dd><ul class="tags"><li>SolidWorks</li><li>Onshape</li><li>KiCad</li></ul></dd>
+                    </div>
+                    <div>
+                        <dt class="mono">Making</dt>
+                        <dd><ul class="tags"><li>3D Printing (FDM &amp; MSLA, 500+ hours)</li><li>Laser Cutting</li><li>Soldering</li></ul></dd>
+                    </div>
+                    <div>
+                        <dt class="mono">Code</dt>
+                        <dd><ul class="tags"><li>MATLAB</li><li>Arduino IDE</li><li>Betaflight</li><li>Claude Code</li></ul></dd>
+                    </div>
                 </dl>
             </section>
 
             <main class="index" aria-labelledby="projects-head">
-                <h2 class="mono section-head" id="projects-head">Projects</h2>
-                <div class="index-head mono" aria-hidden="true">
+                <h2 class="mono muted section-head" id="projects-head">Projects</h2>
+                <div class="mono muted index-head" aria-hidden="true">
                     <span>No.</span><span>Part</span><span>Year</span>
                 </div>
                 <ol class="index-list" id="project-links-container"></ol>
             </main>
 
             <section aria-labelledby="activities-head">
-                <h2 class="mono section-head" id="activities-head">Activities</h2>
-                <dl class="rows">
-                    <dt class="mono">250+ hrs</dt>
-                    <dd>
-                        <details class="entry">
-                            <summary><span class="entry-title">Volunteer &middot; Hiller Aviation Museum</span></summary>
-                            <span class="entry-desc">Volunteered with Hiller Aviation Museum's summer camp program, supporting inventory management and volunteer systems while setting up activities, maintaining organized workspaces, and helping keep campers engaged and learning.</span>
-                        </details>
-                    </dd>
-                    <dt class="mono">75+ hrs</dt>
-                    <dd>
-                        <details class="entry">
-                            <summary><span class="entry-title">Teaching Assistant &middot; Fanari Academy</span></summary>
-                            <span class="entry-desc">Served as a Teaching Assistant at Fanari Academy, supporting classroom instruction and helping students with coursework and learning activities.</span>
-                        </details>
-                    </dd>
-                    <dt class="mono">75+ hrs</dt>
-                    <dd>
-                        <details class="entry">
-                            <summary><span class="entry-title">Volunteer &middot; Samaritan House</span></summary>
-                            <span class="entry-desc">Supported daily operations at Samaritan House, assisting with food delivery, meal preparation, supermarket stocking, and direct food distribution to families facing food insecurity.</span>
-                        </details>
-                    </dd>
+                <h2 class="mono muted section-head" id="activities-head">Activities</h2>
+                <dl class="kv rows">
+                    <div>
+                        <dt class="mono">250+ hrs</dt>
+                        <dd>
+                            <details class="entry">
+                                <summary><span class="title link entry-title">Volunteer &middot; Hiller Aviation Museum</span></summary>
+                                <span class="muted entry-desc">Volunteered with Hiller Aviation Museum's summer camp program, supporting inventory management and volunteer systems while setting up activities, maintaining organized workspaces, and helping keep campers engaged and learning.</span>
+                            </details>
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="mono">75+ hrs</dt>
+                        <dd>
+                            <details class="entry">
+                                <summary><span class="title link entry-title">Teaching Assistant &middot; Fanari Academy</span></summary>
+                                <span class="muted entry-desc">Served as a Teaching Assistant at Fanari Academy, supporting classroom instruction and helping students with coursework and learning activities.</span>
+                            </details>
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="mono">75+ hrs</dt>
+                        <dd>
+                            <details class="entry">
+                                <summary><span class="title link entry-title">Volunteer &middot; Samaritan House</span></summary>
+                                <span class="muted entry-desc">Supported daily operations at Samaritan House, assisting with food delivery, meal preparation, supermarket stocking, and direct food distribution to families facing food insecurity.</span>
+                            </details>
+                        </dd>
+                    </div>
                 </dl>
             </section>
 
-            <p class="mono colophon">&copy; 2026 Pavlos P</p>
+            <p class="mono muted colophon">&copy; 2026 Pavlos P</p>
         </div>
 
         <section class="panel grid-paper" aria-label="Project preview">
@@ -142,51 +166,51 @@
                     <span class="dim dim-y" aria-hidden="true"><i class="dim-line"></i><span class="dim-label" id="dim-h"></span></span>
                     <div class="frame" id="frame">
                         <div class="frame-note">
-                            <p class="mono frame-label">Notes</p>
+                            <p class="mono muted frame-label">Notes</p>
                             <ol class="notes">
                                 <li>Projects: hover a part to preview its render here; click it to open the full drawing.</li>
                                 <li>Experience &amp; Activities: hover a row to read its details here; click it to expand in place.</li>
                                 <li>Title block: names whatever is selected; contact links sit at its foot.</li>
                             </ol>
-                            <p class="mono frame-caption" id="video-text"></p>
+                            <p class="mono muted frame-caption" id="video-text"></p>
                         </div>
                         <div class="frame-card" id="frame-card" hidden>
-                            <p class="mono frame-label" id="card-meta"></p>
-                            <p class="card-title" id="card-title"></p>
+                            <p class="mono muted frame-label" id="card-meta"></p>
+                            <p class="title title-lg card-title" id="card-title"></p>
                             <div class="card-body" id="card-body"></div>
-                            <p class="mono frame-caption" id="card-caption"></p>
+                            <p class="mono muted frame-caption" id="card-caption"></p>
                         </div>
                         <video id="featured-video" muted loop playsinline></video>
                     </div>
                 </div>
             </div>
 
-            <div class="title-block">
+            <div class="cells title-block">
                 <div class="tb-cell tb-wide">
-                    <span class="mono tb-label">Title</span>
-                    <span class="tb-title" id="tb-title" aria-live="polite">Portfolio index</span>
+                    <span class="mono muted">Title</span>
+                    <span class="title tb-title" id="tb-title" aria-live="polite">Portfolio index</span>
                 </div>
-                <div class="tb-cell"><span class="mono tb-label">Dwg no.</span><span class="tb-value" id="tb-no">00</span></div>
-                <div class="tb-cell"><span class="mono tb-label">Date</span><span class="tb-value" id="tb-date">2026</span></div>
-                <div class="tb-cell"><span class="mono tb-label">Drawn by</span><span class="tb-value">P. Paparrizos</span></div>
-                <div class="tb-cell tb-wide"><span class="mono tb-label">Contact</span><span class="tb-value contact-links"></span></div>
+                <div class="tb-cell"><span class="mono muted">Dwg no.</span><span class="mono-data tb-value" id="tb-no">00</span></div>
+                <div class="tb-cell"><span class="mono muted">Date</span><span class="mono-data tb-value" id="tb-date">2026</span></div>
+                <div class="tb-cell"><span class="mono muted">Drawn by</span><span class="mono-data tb-value">P. Paparrizos</span></div>
+                <div class="tb-cell tb-wide"><span class="mono muted">Contact</span><span class="mono-data tb-value contact-links"></span></div>
             </div>
         </section>
     </div>
 
     <div id="project-view" class="project" hidden>
         <header class="project-bar mono">
-            <a href="#" class="back">&larr; Index</a>
+            <a href="#" class="link">&larr; Index</a>
             <span>Pavlos P &middot; Dwg <span id="project-no">00</span></span>
         </header>
 
         <main>
-            <h2 class="project-title" id="project-title">Project Title</h2>
+            <h2 class="title title-display project-title" id="project-title">Project Title</h2>
             <div class="project-grid">
                 <dl class="spec mono">
-                    <dt>Dwg no.</dt><dd id="spec-no"></dd>
-                    <dt>Date</dt><dd id="spec-date"></dd>
-                    <dt>Render</dt><dd id="spec-render"></dd>
+                    <div><dt class="muted">Dwg no.</dt><dd id="spec-no"></dd></div>
+                    <div><dt class="muted">Date</dt><dd id="spec-date"></dd></div>
+                    <div><dt class="muted">Render</dt><dd id="spec-render"></dd></div>
                 </dl>
                 <div class="project-content">
                     <div class="frame project-frame" id="project-frame" hidden>
@@ -194,15 +218,15 @@
                         <img id="project-image" alt="Velocity magnitude contour of the Generation X airframe" hidden>
                     </div>
                     <section class="spec-sheet" id="project-specs" aria-labelledby="specs-head" hidden>
-                        <h3 class="mono section-head" id="specs-head"></h3>
-                        <div class="spec-groups"></div>
+                        <h3 class="mono muted section-head" id="specs-head"></h3>
+                        <div class="cells spec-groups"></div>
                     </section>
                     <div class="prose" id="project-description-container"></div>
                 </div>
             </div>
         </main>
 
-        <footer class="project-foot mono">
+        <footer class="project-foot mono muted">
             <span>&copy; 2026 Pavlos P</span>
             <span class="contact-links"></span>
         </footer>
