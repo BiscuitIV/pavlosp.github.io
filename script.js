@@ -1,22 +1,28 @@
 // ---------- LWS aerodynamics ----------
 const WING_CHORD = 0.11; // m, Generation X
 
-// Profiles normalized to chord = 1 (TE → upper → LE → lower → TE), from the UIUC Airfoil
-// Coordinates Database, cosine-resampled to 35 stations per surface.
-// polar: [α°, Cl, Cd], XFOIL at Re 50,000, Ncrit 9 (airfoiltools.com), α −5° to 12°;
-// gaps are angles where XFOIL did not converge
+// Profiles normalized to chord = 1 (TE → upper → LE → lower → TE), cosine-resampled to 35 stations
+// per surface: E205 from the UIUC Airfoil Coordinates Database, I.S.A. 960 from the batch run's
+// simulated geometry (trailing edge closed, repanelled by XFoil).
+// polar: [α°, Cl, Cd], own XFoil 6.99 batch run at Re 60,000, Ncrit 9, 160 panels, α −5° to 12°;
+// gaps are angles where XFoil did not converge. cl/cd: the best-Cl/Cd point for α 0–5° (cruise window)
 const airfoils = [
     {
-        name: "E205", gen: "Gen 9", chord: 0.100, cl: 0.3403, cd: 0.0586,
+        name: "E205", gen: "Gen 9", chord: 0.100, cl: 0.6509, cd: 0.03285,
         points: [[1,0],[0.9979,0.0002],[0.9915,0.0011],[0.9809,0.0026],[0.9662,0.005],[0.9476,0.008],[0.9251,0.0116],[0.899,0.0156],[0.8695,0.02],[0.8368,0.0249],[0.8013,0.0302],[0.7632,0.0358],[0.7229,0.0417],[0.6806,0.0478],[0.6368,0.054],[0.5919,0.0602],[0.5461,0.066],[0.5,0.0715],[0.4539,0.076],[0.4081,0.0795],[0.3632,0.0815],[0.3194,0.082],[0.2771,0.0808],[0.2368,0.078],[0.1987,0.0739],[0.1632,0.0686],[0.1305,0.0623],[0.101,0.0552],[0.0749,0.0474],[0.0524,0.0391],[0.0338,0.0305],[0.0191,0.0218],[0.0085,0.0133],[0.0021,0.0051],[0,0],[0.0021,-0.0046],[0.0085,-0.0086],[0.0191,-0.0126],[0.0338,-0.016],[0.0524,-0.0189],[0.0749,-0.0211],[0.101,-0.0227],[0.1305,-0.0238],[0.1632,-0.0243],[0.1987,-0.0244],[0.2368,-0.024],[0.2771,-0.0234],[0.3194,-0.0225],[0.3632,-0.0214],[0.4081,-0.0201],[0.4539,-0.0187],[0.5,-0.0173],[0.5461,-0.0158],[0.5919,-0.0143],[0.6368,-0.0129],[0.6806,-0.0115],[0.7229,-0.0102],[0.7632,-0.0089],[0.8013,-0.0078],[0.8368,-0.0067],[0.8695,-0.0056],[0.899,-0.0046],[0.9251,-0.0036],[0.9476,-0.0026],[0.9662,-0.0015],[0.9809,-0.0007],[0.9915,-0.0002],[0.9979,0],[1,0]],
-        polar: [[-5,-0.4222,0.05333],[-4.75,-0.4162,0.04802],[-4.5,-0.4069,0.04401],[-4.25,-0.3957,0.04134],[-4,-0.3822,0.03879],[-3.75,-0.3665,0.03664],[-3.5,-0.3486,0.03476],[-3.25,-0.3292,0.03309],[-3,-0.3098,0.03139],[-2.75,-0.2669,0.02983],[-2.5,-0.2213,0.02838],[-2.25,-0.1749,0.02675],[-2,-0.0936,0.02234],[-1.75,-0.0457,0.02293],[-1.5,-0.0011,0.02348],[-1.25,0.0359,0.024],[-1,0.0713,0.02454],[-0.75,0.1058,0.0251],[-0.5,0.1438,0.02566],[-0.25,0.1842,0.02619],[0,0.2074,0.02684],[0.25,0.2347,0.0275],[0.5,0.276,0.02804],[0.75,0.297,0.0288],[1,0.3165,0.02963],[1.25,0.3543,0.03024],[1.5,0.3716,0.03114],[1.75,0.3861,0.03217],[2,0.4309,0.03266],[2.25,0.4307,0.03403],[2.5,0.4491,0.0351],[2.75,0.481,0.0359],[3,0.482,0.03742],[3.25,0.5106,0.03836],[3.5,0.5227,0.03971],[3.75,0.532,0.04117],[4,0.5725,0.04189],[4.25,0.5672,0.04379],[4.5,0.5803,0.04529],[4.75,0.6144,0.04618],[5,0.6203,0.04791],[5.25,0.6275,0.04966],[5.5,0.645,0.05111],[5.75,0.6688,0.05231],[6,0.6948,0.05337],[6.25,0.719,0.05442],[6.5,0.7393,0.05559],[6.75,0.7529,0.05705],[7,0.7636,0.05867],[7.25,0.7742,0.06028],[7.5,0.7937,0.06125],[7.75,0.8556,0.05871],[8,0.8578,0.06067],[8.25,0.9929,0.04906],[8.5,1.0547,0.04365],[8.75,1.0932,0.04029],[9,1.1413,0.03565],[9.25,1.1523,0.03535],[9.5,1.1589,0.03606],[9.75,1.1653,0.03758],[10,1.1676,0.0399],[10.25,1.1701,0.04235],[10.5,1.1727,0.04484],[10.75,1.1715,0.04746],[11,1.1787,0.05038],[11.5,1.1926,0.05731],[11.75,1.1854,0.06083],[12,1.178,0.06463]]
+        polar: [[-4.75,-0.4266,0.04756],[-4.5,-0.4163,0.04283],[-4.25,-0.4042,0.04036],[-4,-0.3899,0.0377],[-3.75,-0.3437,0.03373],[-3.5,-0.2979,0.03113],[-3.25,-0.2511,0.02911],[-3,-0.209,0.02753],[-2.75,-0.1677,0.02621],[-2.5,-0.1246,0.02422],[-2.25,-0.0109,0.02032],[-2,0.034,0.02051],[-1.75,0.0766,0.02072],[-1.5,0.1184,0.02093],[-1.25,0.1593,0.02113],[-1,0.2032,0.02124],[-0.75,0.2386,0.02147],[-0.5,0.2655,0.02183],[-0.25,0.2922,0.02224],[0,0.3243,0.02253],[0.25,0.3537,0.02287],[0.5,0.3721,0.0235],[0.75,0.3952,0.02404],[1,0.4272,0.02433],[1.25,0.4416,0.02517],[1.5,0.4615,0.02587],[1.75,0.4916,0.02623],[2,0.5043,0.02724],[2.25,0.5237,0.02806],[2.5,0.5505,0.02857],[2.75,0.5615,0.02978],[3,0.5858,0.03046],[3.25,0.6051,0.03134],[3.5,0.6159,0.03269],[3.75,0.6509,0.03285],[4,0.6588,0.03437],[4.25,0.6692,0.03582],[4.5,0.6969,0.03634],[4.75,0.7172,0.03721],[5,0.7262,0.03877],[5.25,0.7404,0.04002],[5.5,0.7671,0.04049],[5.75,0.8034,0.04016],[6,0.8176,0.04128],[6.25,0.8356,0.04209],[6.5,0.8573,0.04253],[6.75,0.8842,0.04244],[7,0.9162,0.04174],[7.25,0.9542,0.04031],[7.5,1.002,0.03772],[7.75,1.0145,0.0381],[8,1.067,0.03454],[8.25,1.093,0.03321],[8.5,1.1212,0.03146],[8.75,1.139,0.03051],[9,1.1515,0.03014],[9.25,1.1558,0.03088],[9.5,1.1585,0.03236],[9.75,1.1582,0.03434],[10,1.1595,0.03651],[10.25,1.1532,0.03857],[10.5,1.1455,0.04069],[10.75,1.1403,0.04317],[11,1.1497,0.04612],[11.25,1.1709,0.04961],[11.5,1.1747,0.05246],[11.75,1.1906,0.05603],[12,1.1849,0.05934]]
     },
     {
-        name: "FX 60-100", gen: "Gen X", chord: WING_CHORD, cl: 0.4728, cd: 0.0510,
-        points: [[1,0],[0.9979,0.0004],[0.9915,0.0017],[0.9809,0.0038],[0.9662,0.0068],[0.9476,0.0105],[0.9251,0.015],[0.899,0.0201],[0.8695,0.0257],[0.8368,0.0317],[0.8013,0.038],[0.7632,0.0444],[0.7229,0.0506],[0.6806,0.0565],[0.6368,0.0619],[0.5919,0.0666],[0.5461,0.0707],[0.5,0.0741],[0.4539,0.0766],[0.4081,0.0783],[0.3632,0.079],[0.3194,0.0786],[0.2771,0.0771],[0.2368,0.0746],[0.1987,0.0711],[0.1632,0.0665],[0.1305,0.0611],[0.101,0.0551],[0.0749,0.0483],[0.0524,0.0409],[0.0338,0.0331],[0.0191,0.0249],[0.0085,0.0165],[0.0021,0.0076],[0,0],[0.0021,-0.0028],[0.0085,-0.0064],[0.0191,-0.0103],[0.0338,-0.0139],[0.0524,-0.0174],[0.0749,-0.02],[0.101,-0.0223],[0.1305,-0.024],[0.1632,-0.0249],[0.1987,-0.025],[0.2368,-0.0243],[0.2771,-0.0228],[0.3194,-0.0203],[0.3632,-0.017],[0.4081,-0.013],[0.4539,-0.0086],[0.5,-0.0041],[0.5461,0.0004],[0.5919,0.0045],[0.6368,0.008],[0.6806,0.0106],[0.7229,0.0125],[0.7632,0.0135],[0.8013,0.0138],[0.8368,0.0133],[0.8695,0.0121],[0.899,0.0106],[0.9251,0.0087],[0.9476,0.0067],[0.9662,0.0046],[0.9809,0.0028],[0.9915,0.0013],[0.9979,0.0003],[1,0]],
-        polar: [[-5,-0.3284,0.03999],[-4.75,-0.2983,0.03655],[-4.5,-0.2713,0.03346],[-4.25,-0.2429,0.03105],[-4,-0.2142,0.02898],[-3.75,-0.186,0.02726],[-3.5,-0.1608,0.02572],[-3.25,-0.1318,0.02399],[-3,-0.111,0.02348],[-2.75,-0.1049,0.0246],[-2.5,-0.0969,0.02512],[-2.25,-0.0865,0.02521],[-2,-0.073,0.02511],[-1.75,-0.0586,0.02488],[-1.5,-0.042,0.02464],[-1.25,-0.0244,0.0244],[-1,-0.0063,0.02419],[-0.75,0.011,0.02398],[-0.5,0.0262,0.02377],[-0.25,0.0409,0.02354],[0,0.0596,0.02324],[0.25,0.0919,0.0236],[0.5,0.1315,0.02443],[0.75,0.1666,0.02534],[1,0.2322,0.02693],[1.25,0.2864,0.02822],[1.5,0.3351,0.02939],[1.75,0.3809,0.03049],[2,0.4275,0.03151],[2.25,0.4756,0.03242],[2.5,0.5165,0.03324],[2.75,0.5517,0.03406],[3,0.5902,0.03478],[3.25,0.6348,0.03525],[3.5,0.6781,0.03556],[3.75,0.7094,0.03609],[4,0.7528,0.03614],[4.25,0.8099,0.03521],[4.5,0.8409,0.03513],[4.75,0.8949,0.03342],[5,0.9305,0.0326],[5.25,0.9744,0.03095],[5.5,1.0134,0.02956],[5.75,1.0465,0.02866],[6,1.0803,0.02782],[6.25,1.1057,0.02753],[6.5,1.1247,0.02774],[6.75,1.1445,0.02823],[7,1.1614,0.02942],[7.25,1.1795,0.03088],[7.5,1.1967,0.03256],[7.75,1.2169,0.03444],[8,1.2364,0.03646],[8.25,1.261,0.03883],[8.5,1.2796,0.04113],[8.75,1.3014,0.04373],[9,1.3193,0.04678],[9.25,1.3373,0.05037],[9.5,1.344,0.05411],[9.75,1.3656,0.05727],[10,1.3582,0.0614],[10.25,1.3504,0.06592],[10.5,1.3371,0.07085],[10.75,1.3152,0.07606],[11,1.2842,0.08127],[11.25,1.2506,0.08722],[11.5,1.2192,0.09422],[11.75,1.1956,0.10187]]
+        name: "I.S.A. 960", gen: "Gen X", chord: WING_CHORD, cl: 0.9983, cd: 0.02282,
+        points: [[1,0.0021],[0.9979,0.0027],[0.9915,0.0045],[0.9809,0.0074],[0.9662,0.0112],[0.9476,0.0156],[0.9251,0.0205],[0.899,0.026],[0.8695,0.0326],[0.8368,0.04],[0.8013,0.0479],[0.7632,0.0553],[0.7229,0.0626],[0.6806,0.07],[0.6368,0.0776],[0.5919,0.0845],[0.5461,0.0903],[0.5,0.0951],[0.4539,0.0991],[0.4081,0.1021],[0.3632,0.1039],[0.3194,0.1043],[0.2771,0.1031],[0.2368,0.101],[0.1987,0.0987],[0.1632,0.0958],[0.1305,0.0876],[0.101,0.0793],[0.0749,0.0748],[0.0524,0.0649],[0.0338,0.0547],[0.0191,0.0442],[0.0085,0.0344],[0.0021,0.0268],[-0.0003,0.0196],[0.0021,0.0148],[0.0085,0.0103],[0.0191,0.0064],[0.0338,0.0031],[0.0524,0.0004],[0.0749,0.0001],[0.101,0.0001],[0.1305,0.0017],[0.1632,0.0039],[0.1987,0.0056],[0.2368,0.0074],[0.2771,0.0092],[0.3194,0.0105],[0.3632,0.0113],[0.4081,0.0117],[0.4539,0.0121],[0.5,0.0121],[0.5461,0.0115],[0.5919,0.0105],[0.6368,0.0097],[0.6806,0.0089],[0.7229,0.0081],[0.7632,0.0072],[0.8013,0.0064],[0.8368,0.0056],[0.8695,0.0049],[0.899,0.0042],[0.9251,0.0035],[0.9476,0.003],[0.9662,0.0026],[0.9809,0.0023],[0.9915,0.0022],[0.9979,0.0021],[1,0.0021]],
+        polar: [[-5,-0.3817,0.06765],[-4.75,-0.3705,0.06466],[-4.5,-0.3592,0.06191],[-4,-0.261,0.04787],[-3.75,-0.1988,0.04255],[-3.5,-0.142,0.0382],[-3.25,-0.0857,0.03557],[-3,-0.0338,0.03303],[-2.75,0.018,0.03176],[-2.5,0.0619,0.03085],[-2.25,0.1116,0.02982],[-2,0.1516,0.02902],[-1.75,0.188,0.02841],[-1.5,0.2321,0.02762],[-1.25,0.283,0.02661],[-1,0.3196,0.02558],[-0.75,0.393,0.02316],[-0.5,0.4313,0.02291],[-0.25,0.4691,0.02259],[0,0.5105,0.02212],[0.25,0.5398,0.02193],[0.75,0.5991,0.02152],[1,0.6289,0.02132],[1.25,0.6585,0.0212],[1.5,0.6897,0.02105],[1.75,0.7202,0.0209],[2,0.7459,0.02091],[2.25,0.7705,0.02099],[2.5,0.7949,0.02107],[2.75,0.8191,0.02115],[3,0.8401,0.02132],[3.25,0.8617,0.02145],[3.5,0.8852,0.02153],[3.75,0.9102,0.02157],[4,0.9321,0.02179],[4.25,0.9564,0.02198],[4.5,0.9774,0.02235],[4.75,0.9983,0.02282],[5,1.02,0.02336],[5.25,1.0418,0.02397],[5.5,1.062,0.02464],[5.75,1.0821,0.02531],[6,1.1032,0.02605],[6.25,1.1246,0.02685],[6.5,1.1467,0.02774],[6.75,1.17,0.02875],[7,1.1938,0.02991],[7.25,1.2183,0.0312],[7.5,1.247,0.03255],[7.75,1.269,0.03405],[8,1.2964,0.03557],[8.25,1.3228,0.03731],[8.5,1.337,0.03909],[8.75,1.3624,0.04002],[9,1.3686,0.04115],[9.25,1.3815,0.0421],[9.5,1.3952,0.04268],[9.75,1.4047,0.04296],[10,1.4028,0.04401],[10.25,1.3993,0.04443],[10.5,1.3907,0.04455],[10.75,1.3743,0.04557],[11,1.3583,0.04683],[11.25,1.3426,0.04837],[11.5,1.3268,0.05055],[11.75,1.3389,0.05633],[12,1.3271,0.0599]]
     }
 ];
+
+// Airfoil sweep: every foil from the batch run with a converged cruise window (273 of 275), ranked.
+// [name, max thickness at 110 mm chord (mm), max camber (% chord), best Cl/Cd for α 0–5°, α of that best (°)]
+const SWEEP_PICK = "I.S.A. 960";
+const sweep = [["mid108a",9.2,3.5,45.0,5.0],["mid108b",9.2,3.0,44.1,5.0],["GOE 388",11.2,5.4,44.0,5.0],["I.S.A. 960",10.3,5.7,43.7,4.75],["fg1",9.0,4.1,42.8,4.5],["GOE 164",9.8,6.6,42.4,5.0],["S2046",9.9,2.6,42.3,5.0],["n9",9.3,4.2,42.0,4.75],["GOE 274",9.4,4.8,41.9,4.25],["mid107",10.9,4.0,41.7,5.0],["goe564",9.0,2.7,41.6,5.0],["eiffel430",10.7,6.3,41.5,5.0],["I.S.A. 961",10.2,5.7,41.5,5.0],["wsm825",9.1,2.5,41.3,5.0],["hn217",8.9,2.3,41.2,5.0],["hn470jt",8.8,2.0,41.1,5.0],["I.S.A. 962",10.5,5.9,41.1,5.0],["hn1032",8.9,2.0,41.1,5.0],["hn1029",8.9,2.2,40.9,5.0],["S4110",9.2,3.1,40.9,5.0],["hn507",9.0,2.1,40.9,5.0],["hn374",8.9,2.0,40.8,5.0],["hn033",8.9,1.9,40.7,5.0],["hn035",8.8,1.9,40.7,5.0],["hn239",8.9,2.1,40.5,5.0],["hn417",8.8,2.3,40.5,5.0],["s2048",9.5,1.9,40.5,5.0],["sb96_lm",8.9,3.0,40.5,5.0],["hn354e",8.9,1.9,40.4,5.0],["hn216",8.9,1.9,40.4,5.0],["hn354sm",9.2,2.3,40.4,5.0],["hn973",9.2,2.4,40.4,5.0],["hn1051",9.4,2.0,40.4,5.0],["naca2408",8.8,2.0,40.2,5.0],["hn465",9.2,2.2,40.1,5.0],["hn038",8.9,1.8,40.1,5.0],["hn418",9.4,2.5,40.1,5.0],["hn360",9.2,2.1,40.1,5.0],["hn707",9.0,1.9,40.1,5.0],["jwl046",10.1,2.6,40.0,5.0],["GOE 565",9.2,2.8,40.0,5.0],["fx60100sm",11.0,3.5,40.0,5.0],["goe585",9.0,3.4,40.0,5.0],["hn464",9.2,2.0,39.9,5.0],["hn1069",9.3,2.0,39.9,5.0],["hn981",8.9,1.9,39.9,5.0],["hn354oc",9.4,2.6,39.9,5.0],["hn470",8.8,1.6,39.9,5.0],["hn989",8.8,1.8,39.9,5.0],["tp50-ds",8.8,1.8,39.8,5.0],["hn839d",9.4,2.4,39.8,5.0],["hn034",8.9,1.8,39.8,5.0],["mid31_F3J_F5J",9.5,2.3,39.8,5.0],["hn216ta",9.1,1.8,39.8,5.0],["hn333",9.3,2.0,39.7,5.0],["hn163tb",9.2,1.9,39.7,5.0],["hn184m",9.4,2.4,39.7,5.0],["hn801",9.3,2.0,39.6,5.0],["hq2590sm",9.9,2.5,39.6,5.0],["hq259b",9.9,2.5,39.6,5.0],["FX60-100",11.0,3.6,39.6,5.0],["hn354a",9.3,2.0,39.6,5.0],["hn354sr",8.9,1.6,39.6,5.0],["hn211",9.0,1.7,39.6,5.0],["wsa828",8.8,2.8,39.6,4.5],["wsi925",10.1,2.5,39.5,5.0],["mid029",9.5,2.5,39.5,5.0],["hn452",9.2,1.8,39.4,5.0],["hn424",9.7,2.6,39.3,5.0],["hn354es",8.9,1.5,39.3,5.0],["goe363",12.2,5.7,39.2,3.5],["hn350m02",9.7,2.3,39.2,5.0],["goe622",8.8,2.5,39.1,5.0],["hn163",9.4,1.8,39.1,5.0],["ami43",9.0,3.6,39.0,4.75],["hn184",9.4,1.8,39.0,5.0],["GOE 282",10.0,5.0,39.0,5.0],["hn1036",9.4,1.8,39.0,5.0],["goe566",9.5,2.6,39.0,5.0],["ag24",9.3,2.2,39.0,5.0],["s9000",9.9,2.4,39.0,5.0],["hn1015",9.3,1.7,38.8,5.0],["arad10",10.8,4.0,38.8,4.5],["hn1054",9.4,1.6,38.7,5.0],["mve8516f3",9.3,1.6,38.6,5.0],["goe563",9.8,2.2,38.6,5.0],["hn436",9.3,1.7,38.6,5.0],["hn1038",9.0,1.5,38.6,5.0],["hq1585",9.4,1.5,38.5,5.0],["hn163ta",9.5,1.7,38.5,5.0],["hn450",9.2,1.9,38.4,5.0],["hn350m01",9.9,1.9,38.3,5.0],["SD7037",10.1,3.0,38.2,5.0],["sd7080",10.1,2.5,38.2,5.0],["sb96_mu",9.3,1.7,38.2,5.0],["ag23",9.8,2.2,38.2,5.0],["hn380",10.1,2.3,38.1,5.0],["rg15",9.8,1.8,38.0,5.0],["SELIG 3002",10.9,3.0,38.0,5.0],["hn450s",9.4,1.9,38.0,5.0],["usnps4",13.0,5.0,38.0,5.0],["ds19",9.3,2.0,37.9,5.0],["hn227",9.9,2.4,37.9,5.0],["goe281",8.8,4.5,37.9,5.0],["GOE 176",11.4,5.6,37.8,3.5],["fx601001",11.1,3.6,37.8,5.0],["mrv120",9.6,2.3,37.8,5.0],["hn838",9.0,1.8,37.7,5.0],["sd8000",9.7,1.7,37.7,5.0],["hs179",9.9,1.7,37.7,5.0],["DP1_72-8_16_DS",9.0,1.7,37.6,5.0],["GOE 165",13.3,5.7,37.6,5.0],["jwl042",9.4,2.5,37.6,5.0],["jwl043",9.4,2.5,37.6,5.0],["SA7038",10.1,3.2,37.5,5.0],["E212",11.6,2.9,37.5,5.0],["hq2195",10.4,2.1,37.4,5.0],["tp202-9",9.9,1.7,37.4,5.0],["cb2195",10.4,2.1,37.4,5.0],["ag52",9.2,1.8,37.3,5.0],["mu8.5_1.73",9.4,1.8,37.3,5.0],["rk40",9.3,2.1,37.3,5.0],["mh32",9.6,2.4,37.2,5.0],["ds21",9.5,1.8,37.2,5.0],["hq159b",9.8,1.5,37.2,5.0],["S7075",9.9,3.0,37.2,5.0],["hq209",9.9,2.0,37.1,5.0],["hq159",9.9,1.5,37.1,5.0],["SD7043",10.0,3.5,37.0,4.75],["rg12a189",9.9,1.8,37.0,5.0],["rg12a",9.9,1.8,37.0,5.0],["nm23",9.3,2.2,37.0,5.0],["sa7036",10.1,2.8,37.0,5.0],["goe795",8.8,2.4,36.9,5.0],["mid327",10.0,2.4,36.8,5.0],["sb99f3j",9.9,3.5,36.7,5.0],["hn1069c",11.0,1.8,36.6,5.0],["hq2090sm",9.9,2.0,36.5,5.0],["sd8040",11.0,2.6,36.4,5.0],["HQ 2.5/9",9.9,2.5,36.4,5.0],["sa7035",10.1,2.6,36.4,5.0],["DP1_72-8_32_DS",9.1,1.7,36.3,5.0],["SD7032",11.0,3.7,36.2,5.0],["GOE 174",9.4,5.6,36.1,3.75],["hn972",11.3,2.5,36.1,5.0],["rg8",11.9,2.2,36.0,5.0],["DP1_77-8_23_DS",9.0,1.8,36.0,5.0],["GOE 180",9.5,4.4,35.9,5.0],["GOE 431",13.0,7.2,35.9,5.0],["goe670",9.9,3.4,35.8,5.0],["HQ 3.5/9",9.9,3.5,35.6,5.0],["sg6041",11.0,2.0,35.6,5.0],["goe795sm",8.8,2.4,35.6,5.0],["bambino6",13.2,6.0,35.4,4.0],["ms535-3v",13.1,3.5,35.4,5.0],["GOE 195",9.5,5.1,35.3,5.0],["hn808",11.4,2.0,35.1,5.0],["mid321a",9.9,3.2,35.1,5.0],["GOE 358",11.9,5.7,35.0,3.75],["sd2030",9.4,2.2,35.0,5.0],["S9037",9.9,3.5,35.0,5.0],["hn969",11.2,2.3,34.9,5.0],["hn971",11.9,2.4,34.9,5.0],["mid322",9.9,3.0,34.7,5.0],["hn188",11.4,2.4,34.7,5.0],["s1223rtl",14.9,8.5,34.7,1.5],["E64",9.3,3.3,34.7,5.0],["b707d",9.9,2.0,34.6,5.0],["HQ 3.0/9",9.9,3.0,34.6,5.0],["e222",11.2,2.5,34.5,5.0],["goe595",10.5,3.0,34.5,5.0],["e224",11.2,1.8,34.3,5.0],["hn409",11.5,2.5,34.1,5.0],["hn1023",11.2,2.4,34.0,5.0],["ms19_87",9.7,2.0,33.9,5.0],["naca2410",11.0,2.0,33.9,5.0],["mid321b",10.4,3.4,33.9,5.0],["HOBIE",9.3,4.0,33.9,5.0],["hs602",11.2,3.0,33.8,5.0],["b707e",9.9,1.8,33.8,5.0],["hn304",11.9,2.4,33.6,5.0],["hn309",11.9,2.1,33.6,5.0],["hq2010",11.0,2.0,33.6,5.0],["sb95_95_2",10.5,1.9,33.5,5.0],["tp210-10",11.0,1.8,33.5,5.0],["jwl044",11.6,2.5,33.4,5.0],["GOE 326",9.0,4.7,33.4,5.0],["GOE 328",8.9,4.3,33.2,5.0],["GOE 137",9.4,4.4,33.2,5.0],["hn304ta",12.2,2.4,32.9,5.0],["tp-ciel-s",10.6,1.6,32.9,5.0],["FX 63-100",10.9,4.3,32.8,5.0],["GOE 178",9.3,4.4,32.5,4.0],["sb99blkm",11.0,2.0,32.5,5.0],["hq2510",11.0,2.5,32.5,5.0],["HQ 3.5/10",11.0,3.5,32.1,5.0],["GOE 184",9.1,5.3,32.1,5.0],["hn003",11.9,2.4,31.9,5.0],["goe515",9.3,2.8,31.9,5.0],["ls413mod",14.2,2.0,31.8,5.0],["GOE 187",9.0,4.8,31.6,4.25],["goe602m",10.6,3.8,31.4,5.0],["GOE 63",9.0,6.7,31.1,5.0],["sb95_105_2",11.5,2.0,31.0,5.0],["sb99blks",11.0,2.0,31.0,5.0],["kc135d",9.9,2.0,30.9,5.0],["sb96_105_3",11.4,3.1,30.9,5.0],["mh117",10.8,2.7,30.7,5.0],["HL75-K-3rev",8.8,4.0,30.5,5.0],["GOE 188",9.8,4.4,30.5,5.0],["HOBIESMO1",9.4,4.0,30.4,5.0],["HQ 3.0/10",11.0,3.0,30.2,5.0],["FX 60-126",13.8,3.6,30.2,5.0],["ah21-7",9.9,2.3,30.0,5.0],["hn203",11.9,2.3,29.9,5.0],["AH 79-100 A",11.0,3.6,29.7,5.0],["boe103",14.0,3.6,29.2,5.0],["GOE 257",9.5,4.1,29.2,5.0],["jwl045",10.2,2.8,29.1,5.0],["GOE 602",10.9,3.5,28.7,5.0],["S3025",10.3,3.6,28.5,5.0],["hq2511",12.1,2.5,28.3,5.0],["E211",12.0,2.6,28.2,5.0],["FX 63-110",12.1,4.3,28.2,5.0],["naca2411",12.1,2.5,27.7,5.0],["S4053",9.8,3.0,27.6,5.0],["fx601261",13.9,4.0,26.9,5.0],["sd2083",9.9,2.8,26.6,5.0],["hn955",11.9,2.5,26.3,5.0],["hq3011",12.1,3.0,26.3,5.0],["E216",11.5,5.2,26.2,5.0],["S4320",10.4,4.5,26.1,4.75],["GOE 303",10.8,5.9,24.7,4.75],["SA7026",9.9,3.8,24.7,5.0],["hq2512",13.2,2.5,24.6,5.0],["SD6080",10.1,3.7,24.4,5.0],["GOE 496",10.9,5.0,24.4,5.0],["GOE 802",10.7,6.2,24.3,4.0],["hq3512",13.2,3.5,24.3,5.0],["DAE-51",10.3,4.0,23.9,5.0],["s3024",10.8,3.5,23.8,5.0],["SG6042",11.0,3.7,23.6,5.0],["hs1712",12.9,4.8,23.0,4.75],["hq3012",13.2,3.0,22.9,5.0],["S4061",10.6,3.9,22.3,5.0],["GOE 450",9.8,5.2,22.0,4.25],["goe546",11.4,3.6,21.6,5.0],["e178",9.5,2.8,21.6,5.0],["FX 63-120",13.2,5.2,21.3,4.75],["GOE 118",9.5,5.7,21.1,3.0],["E66",11.1,4.0,21.0,5.0],["PSU 94-097",10.6,4.1,20.7,5.0],["e176",9.7,3.3,20.1,5.0],["E174",9.8,3.8,19.7,4.75],["e387",10.0,3.8,19.6,5.0],["clarkv",12.8,3.4,19.3,5.0],["E214",12.2,4.0,18.8,4.75],["MH 116",10.8,4.1,18.5,5.0],["ls413",14.1,2.1,18.4,5.0],["s4062",10.5,4.1,17.7,5.0],["E385",9.3,5.7,17.6,4.5],["S4022",12.4,4.3,17.5,5.0],["mh201",14.4,2.6,17.5,5.0],["SG6043",11.0,5.5,17.1,5.0],["ec863914",15.7,4.4,16.0,5.0],["AH 79-100 B",11.0,6.4,15.8,4.5],["e67",12.8,3.7,15.8,5.0],["raf32md",11.2,4.0,14.8,5.0],["goe547",11.6,4.0,14.3,5.0],["l188tip",13.2,2.7,14.2,5.0],["AH 79-100 C",10.9,6.7,13.7,5.0],["fx83w108",12.0,4.2,12.9,5.0],["sg6051",13.0,3.2,11.3,5.0]];
 
 // ISA troposphere density and Sutherland viscosity at altitude h (m)
 function air(h) {
@@ -58,11 +64,12 @@ const projects = {
                     ["Materials", "PLA, balsa"]
                 ] },
                 { group: "Aerodynamics", rows: [
-                    ["Airfoil", "FX 60-100"],
-                    ["Cl", "0.4728"],
-                    ["Cd", "0.0510"],
-                    ["L/D", "≈ 9.3"],
-                    ["Re @ 7 m/s", `≈ ${formatRe(reynolds(7, 0))}`]
+                    ["Airfoil", "I.S.A. 960"],
+                    ["Section Cl @ 4.75°", "0.998"],
+                    ["Section Cd @ 4.75°", "0.0228"],
+                    ["Section Cl/Cd", "≈ 43.7"],
+                    ["Re @ 8 m/s", `≈ ${formatRe(reynolds(8, 0))}`],
+                    ["Design Re", "60,000"]
                 ] },
                 { group: "Propulsion", rows: [
                     ["Motor", "2003.5"],
@@ -105,11 +112,16 @@ const projects = {
             { heading: "Aerodynamic Design Tool" },
             "The streamlining of both bodies was guided by CFD through a GUI I developed on top of OpenFOAM, the open-source CFD toolkit. The goal was to make aerodynamic adjustments quick enough to iterate on between builds, rather than relying on slow, manual simulation setup. So far, CFD analysis has been run at level flight and compares only Generation Nine and Generation X.",
             { heading: "Airfoil Selection" },
-            "After testing multiple airfoils, Generation X uses the FX 60-100. Compared with Generation Nine, the drag coefficient (Cd) dropped from 0.0586 to 0.0510, about 13% lower, and the lift coefficient (Cl) rose from 0.3403 to 0.4728, about 39% higher. The lift-to-drag ratio improved from about 5.8 to about 9.3, roughly 60% better.",
+            "Flight testing showed that the speed needed for level flight is closer to 8 m/s than the 7 m/s cruise target. With the 110mm chord, 8 m/s gives a Reynolds number of about 60,300 at sea level and about 59,500 at 150 metres in the standard atmosphere, so I averaged the design Reynolds number at 60,000 across the operating envelope.",
+            { figure: "reynolds" },
+            "To choose the airfoil, I wrote a batch pipeline around XFoil 6.99, the panel-method solver that airfoiltools.com also uses. It downloads each airfoil's coordinates from airfoiltools, the UIUC Airfoil Coordinates Database, or the AeroSandbox database, converts every file to one format, closes blunt trailing edges that XFoil would otherwise under-predict, and sweeps each section from −5° to 15° at Re 60,000. I ran 275 airfoils through it and ranked them in an interactive tool. The selection followed five steps: find the Reynolds number from the operating environment, choose a metric based on the operational goal, filter by camber and thickness, compare the polars at their optimal angles of attack, and choose the airfoil based on fabrication feasibility and the goal metrics.",
+            { figure: "pipeline" },
+            "The metric was the best lift-to-drag ratio (Cl/Cd) between 0° and 5°, the angles the wing actually sees in cruise with its 5° incidence. Every candidate was kept to a range of cambers and a maximum thickness of more than 8mm at the 110mm chord, so the wing can be built from balsa and PLA with room for a spar. The thinnest of the 275 is 8.8mm.",
+            { figure: "sweep" },
+            "Generation X uses the I.S.A. 960. It scores 43.7 at 4.75°, fourth of the 273 airfoils that converged in the cruise window and within 3% of the best score of 45.0. At 10.3mm thick with 5.7% camber, it is thicker than the two MID 108 sections that score higher, which are 9.2mm thick, and its best point falls inside the cruise window rather than at its edge.",
+            "Compared with the E205 used up to Generation Nine, at each airfoil's best point in the cruise window and Re 60,000, the drag coefficient (Cd) drops from 0.0329 to 0.0228, about 31% lower, and the lift coefficient (Cl) rises from 0.651 to 0.998, about 53% higher. The best section lift-to-drag ratio improves from 19.8 to 43.7, about 2.2 times higher.",
             { figure: "airfoils" },
             { figure: "polars" },
-            "The airfoils were compared across the Reynolds number range expected at the goal operating altitudes, from 0 to 150 metres. With the 110mm chord, the Reynolds number at the 7 m/s cruise target is roughly 52,700 at sea level in the standard atmosphere.",
-            { figure: "reynolds" },
             "[GUI section to be added.]",
             { heading: "Performance" },
             "The first generation weighed 263g and flew for about three seconds. The Predecessor weighs 216g, 47g lighter, about 18% less weight. Level flight speed was 10.1 m/s for Generation Nine and is 8.34 m/s so far for Generation X, against a cruise target of 7 m/s. The next step is further aerodynamic revision to reduce the cruise speed. [Flight time for the Predecessor and additional performance figures to be added.]"
@@ -158,7 +170,7 @@ function polarPanel(chart) {
     panel.innerHTML = `
         <p class="mono-data muted polar-title">${chart.title}</p>
         <div class="polar-plot">
-            <svg class="polar-svg" role="img" aria-label="${chart.title} for ${airfoils.map(af => af.name).join(" and ")}, XFOIL at Re 50,000"></svg>
+            <svg class="polar-svg" role="img" aria-label="${chart.title} for ${airfoils.map(af => af.name).join(" and ")}, XFoil at Re 60,000"></svg>
             <div class="mono-data polar-tip" hidden></div>
         </div>`;
     const plot = panel.querySelector(".polar-plot");
@@ -282,6 +294,8 @@ const figures = {
     airfoils() {
         const chordMm = af => Math.round(af.chord * 1000);
         const mm = Math.max(...airfoils.map(chordMm));
+        // Headroom above the chord line: the tallest section's upper surface plus 1 mm
+        const top = Math.ceil(Math.max(...airfoils.flatMap(af => af.points.map(([, y]) => y * chordMm(af))))) + 1;
         const path = af => "M" + af.points.map(([x, y]) => `${(x * chordMm(af)).toFixed(2)} ${(-y * chordMm(af)).toFixed(2)}`).join("L") + "Z";
         const ticks = Array.from({ length: mm / 10 + 1 }, (_, i) => {
             const x = i * 10;
@@ -296,7 +310,7 @@ const figures = {
             </li>`).join("");
 
         return makeFigure("af", `
-            <svg class="af-plot" viewBox="0 -10 ${mm} 17" role="img"
+            <svg class="af-plot" viewBox="0 ${-top} ${mm} ${top + 7}" role="img"
                 aria-label="${prev.name} (${chordMm(prev)} mm chord) and ${curr.name} (${chordMm(curr)} mm chord) airfoil sections overlaid at true scale">
                 <line class="af-chord" x1="0" y1="0" x2="${mm}" y2="0"/>
                 <path class="af-prev" d="${path(prev)}"/>
@@ -305,7 +319,7 @@ const figures = {
             </svg>
             <div class="af-scale mono muted" aria-hidden="true"><span>0</span><span>${mm} mm</span></div>
             <ul class="fig-legend">${legend}</ul>`,
-            `Fig. 1 — Airfoil sections at true scale, ${prev.gen} vs ${curr.gen}`);
+            `Airfoil sections at true scale, ${prev.gen} vs ${curr.gen}`);
     },
 
     // XFOIL section polars: three single-axis charts plus a key-values table
@@ -317,8 +331,128 @@ const figures = {
             <ul class="fig-legend fig-legend-row">${legend}</ul>
             <div class="polar-charts"></div>
             ${polarSummary()}`,
-            "Fig. 2 — 2D section polars, XFOIL at Re 50,000, Ncrit 9 (airfoiltools.com) · hover to read values");
+            "2D section polars, XFoil 6.99 at Re 60,000, Ncrit 9 · hover to read values");
         fig.querySelector(".polar-charts").append(...polarCharts.map(polarPanel));
+        return fig;
+    },
+
+    // The batch XFoil pipeline (software chain) and the five selection steps it served
+    pipeline() {
+        const chain = [
+            ["Airfoil databases", "airfoiltools · UIUC · AeroSandbox"],
+            ["run_polars.py", "Selig format · blunt trailing edges closed"],
+            ["XFoil 6.99", "Re 60,000 · Ncrit 9 · 160 panels"],
+            ["results.json", "polars + cruise-window metrics"],
+            ["Ranking tool", "sort, filter and compare polars"]
+        ];
+        const stats = [
+            ["Airfoils", "275"],
+            ["Converged points", "21,023"],
+            ["Trailing edges closed", "27"],
+            ["α sweep", "−5° to 15°, 0.25° steps"]
+        ];
+        const steps = [
+            ["Reynolds number", "8 m/s level flight · 110 mm chord · 0–150 m ISA", "Re 60,000"],
+            ["Goal metric", "best Cl/Cd for α 0–5°, the cruise window", "Cl/Cd, 0–5°"],
+            ["Camber and thickness", "range of cambers · max thickness > 8 mm", "275 airfoils"],
+            ["Polars at optimal α", "Cl, Cl/Cd and drag polar at each foil's best α", "273 ranked"],
+            ["Fabrication and metrics", "10.3 mm thick · 5.7% camber · Cl/Cd 43.7 @ 4.75°", "I.S.A. 960"]
+        ];
+        return makeFigure("pipe", `
+            <p class="mono muted pipe-head">Software</p>
+            <ol class="cells pipe-chain">${chain.map(([name, detail], i) => `
+                <li><span class="mono-data muted">${String(i + 1).padStart(2, "0")}</span>
+                <span class="title">${name}</span><span class="mono-data muted">${detail}</span></li>`).join("")}
+            </ol>
+            <dl class="cells re-values pipe-stats">${stats.map(([k, v]) => `
+                <div><dt class="mono-data muted">${k}</dt><dd class="mono-data">${v}</dd></div>`).join("")}
+            </dl>
+            <p class="mono muted pipe-head">Selection</p>
+            <ol class="pipe-steps">${steps.map(([name, detail, result], i) => `
+                <li><span class="mono-data muted">${i + 1}</span>
+                <span class="pipe-step"><span class="title">${name}</span><span class="mono-data muted">${detail}</span></span>
+                <span class="mono-data pipe-result">${result}</span></li>`).join("")}
+            </ol>`,
+            "Airfoil selection pipeline, a batch XFoil run over 275 airfoils");
+    },
+
+    // Every foil in the batch run: thickness against the cruise metric, the chosen foil highlighted
+    sweep() {
+        const fig = makeFigure("polars", `
+            <div class="polar-plot">
+                <svg class="polar-svg" role="img" aria-label="Scatter of ${sweep.length} airfoils: maximum thickness in millimetres against best Cl/Cd for α 0 to 5°. All are thicker than the 8 mm minimum; I.S.A. 960 is 10.3 mm at Cl/Cd 43.7, fourth overall."></svg>
+                <div class="mono-data polar-tip" hidden></div>
+            </div>`,
+            `${sweep.length} airfoils from the batch run, XFoil at Re 60,000 · hover to read values`);
+        const plot = fig.querySelector(".polar-plot");
+        const svg = plot.querySelector("svg");
+        const tip = plot.querySelector(".polar-tip");
+        const H = 300;
+        const m = { t: 12, r: 16, b: 44, l: 52 };
+        const MIN_MM = 8;
+        let width = 0;
+        let sx, sy;
+
+        function draw() {
+            const xt = niceTicks(7, Math.max(...sweep.map(f => f[1])), width < 420 ? 5 : 9);
+            const yt = niceTicks(Math.min(...sweep.map(f => f[3])), Math.max(...sweep.map(f => f[3])), 6);
+            const [x0, x1, y0, y1] = [xt[0], xt.at(-1), yt[0], yt.at(-1)];
+            const right = width - m.r;
+            const bottom = H - m.b;
+            sx = v => m.l + (v - x0) / (x1 - x0) * (right - m.l);
+            sy = v => m.t + (y1 - v) / (y1 - y0) * (bottom - m.t);
+            const pick = sweep.find(f => f[0] === SWEEP_PICK);
+
+            svg.setAttribute("viewBox", `0 0 ${width} ${H}`);
+            svg.setAttribute("height", H);
+            svg.innerHTML = `
+                ${yt.map(v => `<line class="polar-grid" x1="${m.l}" x2="${right}" y1="${sy(v)}" y2="${sy(v)}"/>
+                    <text class="polar-tick" x="${m.l - 8}" y="${sy(v)}" dy="0.32em" text-anchor="end">${v}</text>`).join("")}
+                <line class="polar-axis" x1="${m.l}" x2="${right}" y1="${bottom}" y2="${bottom}"/>
+                ${xt.map(v => `<line class="polar-axis" x1="${sx(v)}" x2="${sx(v)}" y1="${bottom}" y2="${bottom + 5}"/>
+                    <text class="polar-tick" x="${sx(v)}" y="${bottom + 18}" text-anchor="middle">${v}</text>`).join("")}
+                <text class="polar-tick" x="${(m.l + right) / 2}" y="${H - 4}" text-anchor="middle">Max thickness (mm, 110 mm chord)</text>
+                <text class="polar-tick" transform="translate(12 ${(m.t + bottom) / 2}) rotate(-90)" text-anchor="middle">Best Cl/Cd, α 0–5°</text>
+                <line class="sweep-min" x1="${sx(MIN_MM)}" x2="${sx(MIN_MM)}" y1="${m.t}" y2="${bottom}"/>
+                <text class="polar-tick" x="${sx(MIN_MM) + 6}" y="${bottom - 8}">8 mm min.</text>
+                ${sweep.filter(f => f !== pick).map(f => `<circle class="sweep-dot" cx="${sx(f[1]).toFixed(1)}" cy="${sy(f[3]).toFixed(1)}" r="3"/>`).join("")}
+                <circle class="sweep-pick" cx="${sx(pick[1])}" cy="${sy(pick[3])}" r="5"/>
+                <text class="polar-label" x="${sx(pick[1]) + 10}" y="${sy(pick[3]) - 10}">${SWEEP_PICK}</text>
+                <circle class="sweep-hover" r="6" visibility="hidden"/>
+                <rect class="polar-hit" x="${m.l}" y="${m.t}" width="${right - m.l}" height="${bottom - m.t}"/>`;
+        }
+
+        // Hover reads the nearest foil to the pointer
+        svg.addEventListener("pointermove", e => {
+            const r = svg.getBoundingClientRect();
+            const px = e.clientX - r.left;
+            const py = e.clientY - r.top;
+            const dist = f => Math.hypot(sx(f[1]) - px, sy(f[3]) - py);
+            const f = sweep.reduce((a, b) => (dist(b) < dist(a) ? b : a));
+            const ring = svg.querySelector(".sweep-hover");
+            ring.setAttribute("cx", sx(f[1]));
+            ring.setAttribute("cy", sy(f[3]));
+            ring.setAttribute("visibility", "visible");
+            const [name, t, camber, ld, a] = f;
+            tip.innerHTML = `<p><span class="title polar-tip-name">${name}</span>
+                #${sweep.indexOf(f) + 1} of ${sweep.length} · ${t} mm thick · ${camber}% camber · Cl/Cd ${ld} @ ${a}°</p>`;
+            tip.hidden = false;
+            const left = px + 16 + tip.offsetWidth > width ? px - 16 - tip.offsetWidth : px + 16;
+            tip.style.left = `${Math.max(0, left)}px`;
+            tip.style.top = `${m.t}px`;
+        });
+        svg.addEventListener("pointerleave", () => {
+            svg.querySelector(".sweep-hover").setAttribute("visibility", "hidden");
+            tip.hidden = true;
+        });
+
+        new ResizeObserver(([entry]) => {
+            const w = Math.round(entry.contentRect.width);
+            if (w && w !== width) {
+                width = w;
+                draw();
+            }
+        }).observe(plot);
         return fig;
     },
 
@@ -329,7 +463,7 @@ const figures = {
                 <i>Re</i> = <span class="frac"><span>ρ<i>V</i><i>c</i></span><span>μ</span></span>
             </p>
             <div class="re-inputs">
-                <label class="re-input"><span class="mono-data muted">Airspeed <i>V</i></span><input type="range" min="4" max="12" step="0.1" value="7"><output class="mono-data"></output></label>
+                <label class="re-input"><span class="mono-data muted">Airspeed <i>V</i></span><input type="range" min="4" max="12" step="0.1" value="8"><output class="mono-data"></output></label>
                 <label class="re-input"><span class="mono-data muted">Altitude <i>h</i></span><input type="range" min="0" max="150" step="5" value="0"><output class="mono-data"></output></label>
             </div>
             <dl class="cells re-values">
@@ -338,7 +472,7 @@ const figures = {
                 <div><dt class="mono-data muted">c chord</dt><dd class="mono-data">${WING_CHORD.toFixed(3)} m</dd></div>
                 <div class="re-total"><dt class="mono-data muted">Re</dt><dd class="mono-data" data-out="re" aria-live="polite"></dd></div>
             </dl>`,
-            "Fig. 3 — Reynolds number of the Gen X wing, ISA standard atmosphere");
+            "Reynolds number of the Gen X wing, ISA standard atmosphere");
 
         const [speed, alt] = fig.querySelectorAll("input");
         const out = name => fig.querySelector(`[data-out="${name}"]`);
@@ -602,6 +736,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const descContainer = $("project-description-container");
         descContainer.innerHTML = "";
+        let figNo = 0;
         proj.text.forEach(item => {
             if (item.heading) {
                 const h = document.createElement("h3");
@@ -611,7 +746,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
             if (item.figure) {
-                descContainer.appendChild(figures[item.figure]());
+                const fig = figures[item.figure]();
+                fig.querySelector("figcaption").prepend(`Fig. ${++figNo} — `);
+                descContainer.appendChild(fig);
                 return;
             }
             const p = document.createElement("p");

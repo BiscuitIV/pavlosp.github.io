@@ -533,7 +533,7 @@ summary::-webkit-details-marker { display: none; }
 
 .swatch-dash { border-top: 2px dashed var(--ink-2); }
 
-/* Section polars: E205 is the graphite baseline (dashed), FX 60-100 the red current design */
+/* Section polars: E205 is the graphite baseline (dashed), I.S.A. 960 the red current design */
 /* Plain paper: the drafting grid would compete with the chart gridlines */
 .fig-plate.polars { background: var(--paper); }
 
@@ -594,6 +594,50 @@ summary::-webkit-details-marker { display: none; }
 .polar-table th,
 .polar-table td { padding: var(--s-2) var(--s-2) var(--s-2) 0; text-align: left; border-bottom: var(--line-soft); }
 .polar-table thead th { font-weight: 400; border-bottom: var(--line); }
+
+/* Airfoil sweep scatter: graphite field, the chosen foil in red */
+.sweep-dot { fill: var(--ink-2); fill-opacity: 0.4; }
+.sweep-pick { fill: var(--accent); stroke: var(--paper); stroke-width: 2; }
+.sweep-hover { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.sweep-min { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 4 3; }
+
+/* Selection pipeline: software chain in ruled cells, then the numbered steps */
+.pipe-head { margin: 0 0 var(--s-2); color: var(--accent); }
+.pipe-head:not(:first-child) { margin-top: var(--s-6); }
+
+.pipe-chain {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    list-style: none;
+}
+
+.pipe-chain li {
+    flex: 1 1 140px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1);
+    padding: var(--s-3);
+}
+
+.pipe-chain li + li .title::before { content: "→ "; color: var(--accent); }
+
+.pipe-stats { margin-top: var(--s-3); }
+
+.pipe-steps { margin: 0; padding: 0; list-style: none; }
+
+.pipe-steps li {
+    display: grid;
+    grid-template-columns: var(--s-5) 1fr auto;
+    align-items: baseline;
+    gap: var(--s-3);
+    padding: var(--s-3) 0;
+    border-bottom: var(--line-soft);
+}
+
+.pipe-step { display: flex; flex-direction: column; gap: var(--s-1); }
+.pipe-result { text-align: right; }
+.pipe-steps li:last-child .pipe-result { color: var(--accent); }
 
 /* Reynolds calculator */
 .re-eq {
@@ -664,6 +708,8 @@ summary::-webkit-details-marker { display: none; }
     .fig-plate { padding: var(--s-4); }
     .re-input { grid-template-columns: 1fr auto; gap: var(--s-1) var(--s-3); }
     .re-input input { grid-column: 1 / -1; grid-row: 2; }
+    .pipe-steps li { grid-template-columns: var(--s-5) 1fr; }
+    .pipe-result { grid-column: 2; text-align: left; }
 }
 
 @media (prefers-reduced-motion: reduce) {
