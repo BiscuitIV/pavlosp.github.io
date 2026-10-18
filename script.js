@@ -109,6 +109,10 @@ const projects = {
             "The design requirements are: the aircraft must weigh under 250g including battery and payload; carry at least 40g of electronics (camera, video transmitter, flight controller, and GPS) in a protected bay; and power those electronics with at least 5W. It should fly at least 30 minutes at 15°C and 15 minutes at 0°C with full payload, cruise steadily at about 7 m/s, and be thrown by hand by one person.",
             "It should also swap batteries in under a minute without tools, fit in a backpack, be ready to fly within five minutes, and operate between 0 and 150 metres. The airframe and propulsion should cost under $250, excluding electronics. Regulatory and safety requirements, including frequency selection for FPV, lighting for night flying, and privacy and local laws, are being reviewed alongside the design.",
             "The target weight for Generation X is 210g, and the 250g limit still applies. Compared with the 6-inch propeller used in the first three generations, it uses a 7-inch 7x4.5 Bi-Blade propeller, driven by a 2003.5 motor and a 2S to 3S 15A ESC. Its two wings are each 486mm wide. The custom PCBs are designed to provide optimal electronic functionality while saving weight, and a flight controller is being added for a larger feature set and more automation.",
+            { heading: "Generation X: Custom ESC" },
+            "The first of the custom PCBs is the ESC, designed from scratch in KiCad to drive the 2003.5 motor on 2S to 3S at up to 15A. An STM32G0 microcontroller, powered by a TLV70433 3.3V regulator, commands an FD6288T three-phase gate driver. The driver switches six MOSFETs arranged as three half-bridges, with BAT54W bootstrap diodes supplying the high-side gates.",
+            "Commutation is sensorless. Each phase's back-EMF is scaled through a 10k/4.7k divider and compared against a virtual neutral, so the motor needs no Hall sensors. A 1mΩ shunt with an INA181A3 amplifier measures motor current, a divider measures battery voltage, and a 470µF bulk capacitor with ceramic decoupling steadies the input. The board brings out signal and telemetry pins, SWD for programming, and test points on every key net. [Firmware, board mass and dimensions to be added.]",
+            { figure: "esc" },
             { heading: "Aerodynamic Design Tool" },
             "The streamlining of both bodies was guided by CFD through a GUI I developed on top of OpenFOAM, the open-source CFD toolkit. The goal was to make aerodynamic adjustments quick enough to iterate on between builds, rather than relying on slow, manual simulation setup. So far, CFD analysis has been run at level flight and compares only Generation Nine and Generation X.",
             { heading: "Airfoil Selection" },
@@ -122,7 +126,10 @@ const projects = {
             "Compared with the E205 used up to Generation Nine, at each airfoil's best point in the cruise window and Re 60,000, the drag coefficient (Cd) drops from 0.0329 to 0.0228, about 31% lower, and the lift coefficient (Cl) rises from 0.651 to 0.998, about 53% higher. The best section lift-to-drag ratio improves from 19.8 to 43.7, about 2.2 times higher.",
             { figure: "airfoils" },
             { figure: "polars" },
-            "[GUI section to be added.]",
+            { heading: "CFD GUI: PIFOAMUI" },
+            "PIFOAMUI is the GUI behind the CFD work: a browser interface for running OpenFOAM 13 external-aerodynamics cases on an STL part, without writing OpenFOAM dictionaries by hand. It is a single Python file using only the standard library, so it serves its own page with no dependencies or build step.",
+            "A case starts from an STL and flow conditions: speed, angle of attack and yaw, ground, and half models on a symmetry plane. The GUI meshes with blockMesh and snappyHexMesh, adding boundary layers sized by thickness or a y+ target, then checks quality with checkMesh and retries at a finer level if meshing fails. It solves steady (SIMPLE) or transient (PIMPLE) flow with Spalart–Allmaras, k-ω SST or γ-Reθ turbulence models, in parallel over MPI, from a job queue that stops each run once it converges. Results include force coefficients (Cd, Cl, Cm), residual plots, case comparison and a printable report. Built-in studies cover parameter sweeps, mesh independence, aircraft polars, and neutral point and static margin. The source code is on GitHub under GPL-3.0: <a class=\"link\" href=\"https://github.com/BiscuitIV/PIFOAMUI\" target=\"_blank\" rel=\"noopener\">github.com/BiscuitIV/PIFOAMUI ↗</a>",
+            { figure: "cfd" },
             { heading: "Performance" },
             "The first generation weighed 263g and flew for about three seconds. The Predecessor weighs 216g, 47g lighter, about 18% less weight. Level flight speed was 10.1 m/s for Generation Nine and is 8.34 m/s so far for Generation X, against a cruise target of 7 m/s. The next step is further aerodynamic revision to reduce the cruise speed. [Flight time for the Predecessor and additional performance figures to be added.]"
         ]
@@ -374,6 +381,45 @@ const figures = {
                 <span class="mono-data pipe-result">${result}</span></li>`).join("")}
             </ol>`,
             "Airfoil selection pipeline, a batch XFoil run over 275 airfoils");
+    },
+
+    // PIFOAMUI: the case workflow it automates and what it covers
+    cfd() {
+        const chain = [
+            ["STL part", "flow speed · α · yaw · ground"],
+            ["Mesh", "blockMesh + snappyHexMesh · boundary layers"],
+            ["checkMesh", "quality report · finer-level retry"],
+            ["Solve", "SIMPLE or PIMPLE · MPI · job queue"],
+            ["Results", "Cd · Cl · Cm · residuals · report"]
+        ];
+        const stats = [
+            ["Turbulence", "SA · k-ω SST · γ-Reθ"],
+            ["Studies", "sweeps · mesh independence · polars"],
+            ["Stack", "Python 3 stdlib · OpenFOAM 13"],
+            ["Modes", "Basic · Intermediate · Advanced"]
+        ];
+        return makeFigure("pipe", `
+            <p class="mono muted pipe-head">Workflow</p>
+            <ol class="cells pipe-chain">${chain.map(([name, detail], i) => `
+                <li><span class="mono-data muted">${String(i + 1).padStart(2, "0")}</span>
+                <span class="title">${name}</span><span class="mono-data muted">${detail}</span></li>`).join("")}
+            </ol>
+            <dl class="cells re-values pipe-stats">${stats.map(([k, v]) => `
+                <div><dt class="mono-data muted">${k}</dt><dd class="mono-data">${v}</dd></div>`).join("")}
+            </dl>`,
+            `PIFOAMUI workflow, a browser GUI for OpenFOAM 13 · <a class="link" href="https://github.com/BiscuitIV/PIFOAMUI" target="_blank" rel="noopener">GitHub ↗</a>`);
+    },
+
+    // KiCad schematic as a 200 dpi render; clicking it opens the full-size image, the caption links the vector PDF
+    esc() {
+        const png = "ESC%20V1%20Schematic.png";
+        const pdf = "ESC%20V1%20Schematic.pdf";
+        return makeFigure("esc", `
+            <a href="${png}" target="_blank" rel="noopener">
+                <img class="esc-img" src="${png}" width="2339" height="1654" loading="lazy"
+                    alt="LWS X ESC V1 schematic: BEMF sensing, current sense, gate driver, LDO, MCU, power input, voltage sense, three half-bridges, connections and test points">
+            </a>`,
+            `LWS X ESC V1 schematic, KiCad · click to enlarge · <a class="link" href="${pdf}" target="_blank" rel="noopener">PDF</a>`);
     },
 
     // Every foil in the batch run: thickness against the cruise metric, the chosen foil highlighted

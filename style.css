@@ -469,6 +469,9 @@ summary::-webkit-details-marker { display: none; }
 .prose p { margin: 0 0 var(--s-5); line-height: 1.6; }
 .prose .subhead { margin: var(--s-7) 0 var(--s-3); }
 
+/* Links inside running text and captions keep their underline, or they read as plain words */
+.prose :is(p, figcaption) .link { color: var(--accent); text-decoration-color: currentColor; }
+
 .prose strong {
     font-weight: 600;
     font-variant-caps: all-small-caps;
@@ -536,6 +539,10 @@ summary::-webkit-details-marker { display: none; }
 /* Section polars: E205 is the graphite baseline (dashed), I.S.A. 960 the red current design */
 /* Plain paper: the drafting grid would compete with the chart gridlines */
 .fig-plate.polars { background: var(--paper); }
+
+/* ESC schematic: the render fills the plate edge to edge */
+.fig-plate.esc { padding: 0; background: var(--paper); }
+.esc-img { display: block; width: 100%; height: auto; cursor: zoom-in; }
 
 .fig-legend-row { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); margin: 0 0 var(--s-4); }
 
