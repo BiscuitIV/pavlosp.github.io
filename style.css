@@ -7,7 +7,8 @@
     --rule: #C9C3B4;
     --grid-minor: rgba(28, 27, 25, 0.05);
     --grid-major: rgba(28, 27, 25, 0.16);
-    --accent: #C8321E;
+    /* Red pencil, dark enough for 12px text: 5.5:1 on --paper, 4.9:1 on --paper-2 */
+    --accent: #B02A17;
 
     --serif: "Newsreader", Georgia, serif;
     --mono: "IBM Plex Mono", ui-monospace, monospace;
@@ -29,6 +30,9 @@
 
     --line: 1px solid var(--ink);
     --line-soft: 1px solid var(--rule);
+    /* Corner rounding: boxes (frames, plates, ruled cell groups) and small parts (chips, thumbnails, tooltips, focus rings) */
+    --radius: 4px;
+    --radius-sm: 2px;
     --article: 960px;
 
     --dur: 150ms;
@@ -70,10 +74,23 @@ a { color: inherit; text-decoration: none; }
 :focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: var(--s-1);
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
 }
 
 /* ---------- Primitives: every component composes these ---------- */
+
+/* Button with no chrome of its own; first, so the voices and .chip below override its resets */
+.bare {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-align: left;
+    cursor: pointer;
+}
 
 /* Text voices: mono labels (uppercase), mono data (case kept for units like mm, mAh, ρ), serif titles */
 .mono {
@@ -104,6 +121,9 @@ a { color: inherit; text-decoration: none; }
 .title-lg { font-size: var(--t-40); line-height: 1; letter-spacing: -0.02em; }
 .title-display { font-size: var(--t-display); line-height: 0.9; letter-spacing: -0.03em; }
 
+/* Upright semibold: titles that are scanned (entries, parts, cards, figures) rather than displayed */
+.upright { font-style: normal; font-weight: 600; }
+
 /* Bold upright serif: section headings inside an article */
 .subhead {
     font-family: var(--serif);
@@ -127,6 +147,27 @@ a { color: inherit; text-decoration: none; }
 /* Text links that leave the page (sites, email, files) get a diagonal arrow, hidden from screen readers */
 a.link:not([href^="#"])::after { content: "\2009\2197"; content: "\2009\2197" / ""; }
 
+/* Hover cue in red pencil for small labels (part numbers, contents numbers); same triggers as .link */
+.cue { transition: color var(--dur) var(--ease); }
+
+.cue:is(:hover, :focus-visible),
+:is(a, button):is(:hover, :focus-visible) .cue { color: var(--accent); }
+
+/* Bulleted list with red-pencil markers */
+.marks { margin: 0; padding-left: var(--s-5); }
+.marks li::marker { color: var(--accent); }
+
+/* Ruled paper label; as a toggle button, pressed is inked in */
+.chip {
+    padding: var(--s-1) var(--s-2);
+    border: var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--paper);
+    transition: color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
 /* Label/value list; optional <div> rows span both columns via subgrid */
 .kv {
     display: grid;
@@ -146,14 +187,28 @@ a.link:not([href^="#"])::after { content: "\2009\2197"; content: "\2009\2197" / 
 .kv dt { color: var(--ink-2); }
 .kv dd { margin: 0; }
 
-/* Ruled cells: the 1px gaps over an ink background draw the internal rules */
+/* Ruled cells: the 1px gaps over an ink background draw the internal rules. The outer edge is a real border,
+   so it follows the rounded corners; the clip keeps the square cells inside it */
 .cells {
     gap: 1px;
-    padding: 1px;
+    /* Zero padding also clears the browser's list indent on <ul class="cells">, which would show as ink */
+    padding: 0;
+    border: var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
     background: var(--ink);
 }
 
 .cells > * { background: var(--paper); }
+
+/* Stat cell: label and value stacked, usually inside .cells */
+.stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1);
+    min-width: 0;
+    padding: var(--s-2) var(--s-3);
+}
 
 /* Drafting grid in CSS centimetres (nominal: 1cm = 37.8px at 96dpi): major every 1cm, minor every 2mm */
 .grid-paper {
@@ -172,9 +227,35 @@ a.link:not([href^="#"])::after { content: "\2009\2197"; content: "\2009\2197" / 
     border-bottom: var(--line);
 }
 
+/* Collapsible depth (<details>): a mono summary with a red +/− marker, the body indented under it */
+.fold { margin: 0 0 var(--s-5); border-top: var(--line-soft); border-bottom: var(--line-soft); }
+
+.fold > summary {
+    display: flex;
+    gap: var(--s-3);
+    align-items: baseline;
+    padding: var(--s-2) 0;
+    list-style: none;
+    cursor: pointer;
+}
+
+.fold > summary::-webkit-details-marker { display: none; }
+
+.fold > summary::before {
+    content: "+";
+    content: "+" / "";
+    width: 1ch;
+    color: var(--accent);
+}
+
+.fold[open] > summary::before { content: "\2212"; content: "\2212" / ""; }
+
+.fold-body { padding: var(--s-2) 0 var(--s-1) var(--s-5); }
+.fold-body > :last-child { margin-bottom: var(--s-3); }
+
 /* ---------- Home: left column ---------- */
 .sheet-left {
-    width: 45%;
+    width: 50%;
     min-height: 100vh;
     padding: var(--s-7);
     display: flex;
@@ -185,7 +266,6 @@ a.link:not([href^="#"])::after { content: "\2009\2197"; content: "\2009\2197" / 
 .name { margin: 0; }
 
 .bio { margin: var(--s-6) 0 0; }
-.bio dd { font-style: italic; }
 
 /* Resume rows: spacing lives inside each row so hover targets touch, with no dead gap between entries */
 .rows { row-gap: 0; }
@@ -195,108 +275,104 @@ a.link:not([href^="#"])::after { content: "\2009\2197"; content: "\2009\2197" / 
 .entry-meta { display: block; }
 .entry-desc { display: block; margin-top: var(--s-1); }
 
-.entry-points {
-    margin: var(--s-1) 0 0;
-    padding-left: var(--s-5);
-}
+.entry-points { margin-top: var(--s-1); }
 
-.entry-points li::marker { color: var(--accent); }
-
-/* Hover details (class set by script.js): role bullets move into the panel card and stay readable by screen readers;
-   a cue under each role says to hover and, once active, where the details went */
-.roles.hover-details .entry-points {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-}
-
-.roles.hover-details dd::after {
-    content: "Hover for details \2192";
-    content: "Hover for details \2192" / "";
-    display: block;
-    margin-top: var(--s-1);
-    font-family: var(--mono);
-    font-size: var(--t-12);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-2);
-    transition: color var(--dur) var(--ease);
-}
-
-/* Rows are focusable here (script.js adds tabindex): they bleed sideways so an inset ring clears the text and the row above */
-.roles.hover-details > div {
-    margin-inline: calc(-1 * var(--s-2));
-    padding-inline: var(--s-2);
-}
-
-.roles.hover-details > div:focus-visible { outline-offset: -2px; }
-
-.roles.hover-details dt { transition: color var(--dur) var(--ease); }
-
-.roles.hover-details > div:is(:hover, :focus-within) dt { color: var(--accent); }
-
-.roles.hover-details > div:is(:hover, :focus-within) dd::after {
-    content: "Shown at right \2192";
-    content: "Shown at right \2192" / "";
-    color: var(--accent);
-}
-
+/* Skill chips: each skill is its own ruled label, so multi-word skills never run together */
 .tags {
     display: flex;
     flex-wrap: wrap;
-    /* Wider column gap keeps multi-word serif skills visually separate */
-    gap: 0 var(--s-5);
+    gap: var(--s-2);
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
+/* A wider label column clears "Electronics" and "Fabrication"; rows get extra air for the taller chips */
+.skills { --kv-label: 7.5em; }
+.skills > div + div { padding-top: var(--s-4); }
+
+/* Discipline filter: chip toggles above the index */
+.filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-bottom: var(--s-4);
+}
+
+.filter .chip:is(:hover, :focus-visible):not([aria-pressed="true"]) { color: var(--accent); }
+
+/* Index rows: number, thumbnail, title over outcome over tags, year */
 .index-head,
 .part {
     display: grid;
-    grid-template-columns: var(--s-7) 1fr auto;
+    grid-template-columns: var(--s-7) var(--thumb-w) 1fr auto;
     gap: var(--s-4);
     align-items: baseline;
+    --thumb-w: 96px;
 }
 
 .index-head { padding-bottom: var(--s-2); border-bottom: var(--line); }
 
 .index-list { list-style: none; margin: 0; padding: 0; }
+.index-list > li { border-bottom: var(--line-soft); }
 
-.part { padding: var(--s-4) 0; border-bottom: var(--line-soft); }
+/* Rows bleed sideways so the rounded hover tint and focus ring clear the text; the rule under each stays square */
+.part {
+    margin-inline: calc(-1 * var(--s-2));
+    padding: var(--s-4) var(--s-2);
+    border-radius: var(--radius-sm);
+    transition: background-color var(--dur) var(--ease);
+}
 
-.part-no { transition: color var(--dur) var(--ease); }
-.part:is(:hover, :focus-visible) .part-no { color: var(--accent); }
+.part:is(:hover, :focus-visible) { background: var(--paper-2); }
+.part:focus-visible { outline-offset: -2px; }
+
+.part-thumb {
+    align-self: start;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    border: var(--line);
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+}
+
+.part-outcome { display: block; margin-top: var(--s-1); }
+.part-tags { display: block; margin-top: var(--s-2); }
 
 .colophon { margin: auto 0 0; }
 
-/* ---------- Home: preview panel ---------- */
+/* ---------- Home: featured-part panel ---------- */
 .panel {
     position: fixed;
     top: 0;
     right: 0;
-    width: 55%;
+    width: 50%;
     height: 100vh;
     display: flex;
     flex-direction: column;
     border-left: var(--line);
 }
 
+/* The frame and its results row share one width, budgeted so both fit above the title block */
 .panel-stage {
+    --frame-w: min(100%, calc((100vh - 380px) * 1.6));
     flex: 1;
     min-height: 0;
-    display: grid;
-    place-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-5);
     padding: var(--s-7) var(--s-8) var(--s-7) var(--s-7);
 }
 
 .frame-wrap {
     position: relative;
-    width: min(100%, calc((100vh - 280px) * 1.6));
+    width: var(--frame-w);
 }
+
+.results.panel-results { width: var(--frame-w); margin: 0; }
 
 .frame {
     position: relative;
@@ -305,6 +381,7 @@ a.link:not([href^="#"])::after { content: "\2009\2197"; content: "\2009\2197" / 
     place-items: center;
     overflow: hidden;
     border: var(--line);
+    border-radius: var(--radius);
     background: var(--paper);
 }
 
@@ -351,16 +428,8 @@ a.link:not([href^="#"])::after { content: "\2009\2197"; content: "\2009\2197" / 
     object-fit: cover;
 }
 
-.frame-featured .frame-caption {
-    position: relative;
-    align-self: flex-start;
-    padding: var(--s-1) var(--s-2);
-    border: var(--line);
-    background: var(--paper);
-    transition: color var(--dur) var(--ease);
-}
+.frame-featured .frame-caption { position: relative; align-self: flex-start; }
 
-.frame-featured:is(:hover, :focus-visible) .frame-caption { color: var(--accent); }
 /* The frame clips overflow, so the focus ring sits inside it */
 .frame-featured:focus-visible { outline-offset: calc(-1 * var(--s-1)); }
 
@@ -431,22 +500,21 @@ a.link:not([href^="#"])::after { content: "\2009\2197"; content: "\2009\2197" / 
 .frame-wrap.is-active .dim { opacity: 1; }
 .frame-wrap.is-active .dim-line { transform: none; }
 
-/* Title block: ruled cells, flush against the panel's own border */
+/* Title block: ruled cells, flush against the panel's own border, so only the free corner is rounded */
 .title-block {
     align-self: flex-end;
     width: min(100%, 288px);
     display: grid;
     grid-template-columns: auto auto 1fr;
-    padding: 1px 0 0 1px;
+    border-width: 1px 0 0 1px;
+    border-radius: var(--radius) 0 0 0;
+    /* No clip: the contact links' focus rings must show; the first cell rounds itself instead */
+    overflow: visible;
 }
 
-.tb-cell {
-    display: flex;
-    flex-direction: column;
-    gap: var(--s-1);
-    padding: var(--s-1) var(--s-2);
-    min-width: 0;
-}
+.title-block > :first-child { border-top-left-radius: calc(var(--radius) - 1px); }
+
+.tb-cell { padding: var(--s-1) var(--s-2); }
 
 .tb-wide { grid-column: span 3; }
 
@@ -495,15 +563,8 @@ a.link:not([href^="#"])::after { content: "\2009\2197"; content: "\2009\2197" / 
     padding: var(--s-7) 0 var(--s-8);
 }
 
-.spec {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s-2) var(--s-6);
-    margin: 0;
-}
-
-.spec > div { display: flex; gap: var(--s-2); }
-.spec dd { margin: 0; }
+/* Summary: the 15-second read (problem, role, timeline, tools) above the key results */
+.summary { --kv-label: 7.5em; }
 
 /* Key results: ruled cells, value over a plain-language label over the mono detail */
 .results {
@@ -513,13 +574,7 @@ a.link:not([href^="#"])::after { content: "\2009\2197"; content: "\2009\2197" / 
     list-style: none;
 }
 
-.results li {
-    flex: 1 1 140px;
-    display: flex;
-    flex-direction: column;
-    gap: var(--s-1);
-    padding: var(--s-3);
-}
+.results li { flex: 1 1 140px; padding: var(--s-3); }
 
 .result-label { line-height: 1.25; }
 
@@ -536,10 +591,9 @@ a.link:not([href^="#"])::after { content: "\2009\2197"; content: "\2009\2197" / 
 /* Section number sits above the heading, matching the contents list */
 .subhead-no { display: block; margin-bottom: var(--s-1); }
 
-/* Scannable lists: red-pencil markers, small-caps <strong> labels lead each item */
-.prose-list { margin: 0 0 var(--s-5); padding-left: var(--s-5); }
+/* Scannable lists: red-pencil markers (.marks), small-caps <strong> labels lead each item */
+.prose-list { margin-bottom: var(--s-5); }
 .prose-list li + li { margin-top: var(--s-2); }
-.prose-list li::marker { color: var(--accent); }
 
 /* Contents: numbered section buttons in two columns */
 .toc { margin: var(--s-6) 0 0; }
@@ -560,16 +614,17 @@ a.link:not([href^="#"])::after { content: "\2009\2197"; content: "\2009\2197" / 
     align-items: baseline;
     width: 100%;
     padding: var(--s-1) 0;
-    border: 0;
-    background: none;
-    color: inherit;
-    font: inherit;
-    text-align: left;
-    cursor: pointer;
 }
 
-.toc-item .mono { transition: color var(--dur) var(--ease); }
-.toc-item:is(:hover, :focus-visible) .mono { color: var(--accent); }
+/* Next part: closes the article and keeps the reader going */
+.next-part {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1);
+    margin-top: var(--s-7);
+    padding-top: var(--s-3);
+    border-top: var(--line);
+}
 
 /* Links inside running text and captions keep their underline, or they read as plain words */
 .prose :is(p, figcaption) .link { color: var(--accent); text-decoration-color: currentColor; }
@@ -598,7 +653,7 @@ a.link:not([href^="#"])::after { content: "\2009\2197"; content: "\2009\2197" / 
 
 /* ---------- Project figures ---------- */
 .fig { margin: var(--s-6) 0 var(--s-7); }
-.fig-plate { border: var(--line); padding: var(--s-5); }
+.fig-plate { border: var(--line); border-radius: var(--radius); padding: var(--s-5); }
 .fig figcaption { margin-top: var(--s-2); }
 
 /* Airfoil overlay (SVG units are millimetres) */
@@ -642,8 +697,8 @@ a.link:not([href^="#"])::after { content: "\2009\2197"; content: "\2009\2197" / 
 /* Plain paper: the drafting grid would compete with the chart gridlines */
 .fig-plate.polars { background: var(--paper); }
 
-/* Photos and renders fill the plate edge to edge */
-.fig-plate.photo { padding: 0; background: var(--paper); }
+/* Photos and renders fill the plate edge to edge, clipped to its corners (chart plates don't clip: their tooltips overflow) */
+.fig-plate.photo { padding: 0; overflow: hidden; background: var(--paper); }
 .fig-img { display: block; width: 100%; height: auto; cursor: zoom-in; }
 video.fig-img { cursor: auto; }
 
@@ -691,6 +746,7 @@ video.fig-img { cursor: auto; }
     max-width: 260px;
     padding: var(--s-2) var(--s-3);
     border: var(--line);
+    border-radius: var(--radius-sm);
     background: var(--paper);
     line-height: 1.5;
     pointer-events: none;
@@ -766,18 +822,12 @@ video.fig-img { cursor: auto; }
 
 .re-values { display: flex; flex-wrap: wrap; margin: 0; }
 
-.re-values > div {
-    flex: 1 1 120px;
-    display: flex;
-    flex-direction: column;
-    gap: var(--s-1);
-    padding: var(--s-2) var(--s-3);
-}
+.re-values > div { flex: 1 1 120px; }
 
 .re-values dd { margin: 0; }
 .re-total dd { font-size: var(--t-18); color: var(--accent); }
 
-/* ---------- Narrow screens: panel stacks under the index ---------- */
+/* ---------- Narrow screens: one column; index rows carry their own images, so the panel is dropped ---------- */
 @media (max-width: 860px) {
     .sheet-left {
         width: auto;
@@ -785,17 +835,13 @@ video.fig-img { cursor: auto; }
         padding: var(--s-5) var(--s-4) var(--s-7);
     }
 
-    .panel {
-        position: static;
-        width: auto;
-        height: auto;
-        border-left: 0;
-        border-top: var(--line);
-    }
+    .panel { display: none; }
 
-    .panel-stage { padding: var(--s-7) var(--s-7) var(--s-7) var(--s-4); }
-    .frame-wrap { width: 100%; }
-    .title-block { width: 100%; }
+    /* Rows drop to three columns; the year moves under the outcome */
+    .index-head,
+    .part { grid-template-columns: var(--s-5) var(--thumb-w) 1fr; --thumb-w: 72px; }
+    .part > :last-child { grid-column: 3; }
+    .index-head > :last-child { display: none; }
 
     .project { padding: 0 var(--s-4); }
     .project-head { padding: var(--s-7) 0 var(--s-6); }

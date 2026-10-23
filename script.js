@@ -51,9 +51,13 @@ const projects = {
     "plane": {
         title: "LWS X",
         subtitle: "Sub-250 g endurance RC plane",
+        outcome: "18% lighter airframe and 2.2× wing lift-to-drag from a 275-airfoil sweep",
+        thumb: "lws-x/Velocity%20Picture%203.png",
+        tags: ["Aero", "CAD", "Electronics", "Fabrication"],
         date: "2024-2026",
+        problem: "Fit a one-metre-class wing, battery and 40 g payload under 250 g, and cruise at 7 m/s for 30 minutes",
         role: "Personal project · design, build, flight test",
-        tools: "Onshape · KiCad · XFoil · OpenFOAM · Python · 3D printing",
+        tools: "Onshape · KiCad · XFoil · OpenFOAM · 3D printing",
         results: [
             ["−18%", "Lighter airframe", "263 g (Gen 1) → 216 g (Gen 9)"],
             ["2.2×", "Higher wing lift-to-drag", "19.8 → 43.7, E205 → I.S.A. 960 airfoil"],
@@ -106,8 +110,9 @@ const projects = {
             ]
         },
         text: [
-            "<strong>LWS X</strong> is the current generation of the Light-Weight System (LWS), a radio-controlled plane I have designed, built and flown since 2024. The brief has not changed: a one-metre-class wingspan for under 250 grams, including battery and payload. Across nine generations the plane went from a 263g tube glider that flew for three seconds to the 216g Predecessor, and Generation X is built on a batch XFoil pipeline that ranked 275 airfoils, a browser interface for OpenFOAM CFD that I built, and a custom motor controller.",
-            { heading: "Design Requirements" },
+            "<strong>LWS X</strong> is a radio-controlled plane with a one-metre-class wingspan that weighs under 250 grams, battery and payload included. It is the current generation of the Light-Weight System (LWS), which I have designed, built and flown since 2024.",
+            "Nine generations took it from a 263g tube glider that flew for three seconds to the 216g Predecessor. Generation X draws on a 275-airfoil XFoil sweep, OpenFOAM CFD and a custom motor controller.",
+            { heading: "The brief: under 250g, 40g payload, 30 minutes aloft" },
             "Generation X must meet the first four requirements; the rest keep it practical in the field.",
             { list: [
                 "<strong>Mass</strong> under 250g including battery and payload, 210g target",
@@ -118,28 +123,31 @@ const projects = {
                 "<strong>Cost</strong> under $250 for airframe and propulsion, excluding electronics"
             ] },
             "Regulatory and safety requirements, including FPV frequency selection, lighting for night flying, and privacy and local laws, are being reviewed alongside the design.",
-            { heading: "Airfoil Selection" },
-            "<strong>Design Reynolds number.</strong> Flight testing showed level flight needs closer to 8 m/s than the 7 m/s cruise target. At 8 m/s on the 110mm chord, Re is about 60,300 at sea level and 59,500 at 150 metres in the standard atmosphere, so the design Re is 60,000 across the operating envelope.",
+            { heading: "275 airfoils ranked: the I.S.A. 960 has 2.2× the E205's lift-to-drag" },
+            "<strong>Design Re: 60,000.</strong> Flight testing showed level flight needs closer to 8 m/s than the 7 m/s cruise target. At 8 m/s on the 110mm chord, Re is about 60,300 at sea level and 59,500 at 150 metres in the standard atmosphere.",
             { figure: "reynolds" },
-            "<strong>Pipeline.</strong> A batch pipeline around XFoil 6.99, the panel-method solver that airfoiltools.com also uses, ran 275 airfoils within these boundaries:",
-            { list: [
-                "<strong>Sources</strong> coordinates from airfoiltools, the UIUC Airfoil Coordinates Database or the AeroSandbox database",
-                "<strong>Geometry</strong> every file converted to Selig format, with 27 blunt trailing edges closed so XFoil does not under-predict them",
-                "<strong>Solver</strong> Re 60,000, Ncrit 9, 160 panels",
-                "<strong>Sweep</strong> α −5° to 15° in 0.25° steps, 21,023 converged points",
-                "<strong>Output</strong> polars and cruise-window metrics, ranked in an interactive tool to sort, filter and compare polars"
-            ] },
-            "The selection then followed five steps, from operating conditions to a buildable airfoil:",
-            { list: [
-                "<strong>Reynolds number</strong> 8 m/s level flight on the 110mm chord from 0 to 150 metres, giving Re 60,000",
-                "<strong>Goal metric</strong> best Cl/Cd between 0° and 5°, the cruise window",
-                "<strong>Camber and thickness</strong> a range of cambers and a maximum thickness above 8mm, which all 275 airfoils meet",
-                "<strong>Polars at optimal angle</strong> Cl, Cl/Cd and the drag polar at each airfoil's best angle, with 273 ranked",
-                "<strong>Fabrication and metrics</strong> the I.S.A. 960: 10.3mm thick, 5.7% camber, Cl/Cd 43.7 at 4.75°"
-            ] },
-            "<strong>Metric and filters.</strong> The metric was the best lift-to-drag ratio (Cl/Cd) between 0° and 5°, the angles the wing actually sees in cruise with its 5° incidence. Candidates were kept to a range of cambers and a maximum thickness above 8mm at the 110mm chord, so the wing can be built from balsa and PLA with room for a spar. The thinnest of the 275 is 8.8mm.",
+            "<strong>Choice: I.S.A. 960.</strong> It scores 43.7 at 4.75°, fourth of the 273 airfoils that converged in the cruise window and within 3% of the best score of 45.0.",
+            "The two MID 108 sections that score higher are 9.2mm thick. The I.S.A. 960 is 10.3mm thick with 5.7% camber, and its best point falls inside the cruise window rather than at its edge.",
             { figure: "sweep" },
-            "<strong>Choice: I.S.A. 960.</strong> It scores 43.7 at 4.75°, fourth of the 273 airfoils that converged in the cruise window and within 3% of the best score of 45.0. The two MID 108 sections that score higher are 9.2mm thick; the I.S.A. 960 is 10.3mm thick with 5.7% camber, and its best point falls inside the cruise window rather than at its edge.",
+            { fold: "How the 275 airfoils were simulated and ranked", text: [
+                "<strong>Sweep.</strong> 275 airfoils were run through XFoil 6.99, the panel-method solver that airfoiltools.com also uses, within these boundaries:",
+                { list: [
+                    "<strong>Sources</strong> coordinates from airfoiltools, the UIUC Airfoil Coordinates Database or the AeroSandbox database",
+                    "<strong>Geometry</strong> every file converted to Selig format, with 27 blunt trailing edges closed so XFoil does not under-predict them",
+                    "<strong>Solver</strong> Re 60,000, Ncrit 9, 160 panels",
+                    "<strong>Sweep</strong> α −5° to 15° in 0.25° steps, 21,023 converged points",
+                    "<strong>Output</strong> polars and cruise-window metrics, ranked in an interactive tool to sort, filter and compare polars"
+                ] },
+                "<strong>Metric and filters.</strong> The metric was the best lift-to-drag ratio (Cl/Cd) between 0° and 5°, the angles the wing actually sees in cruise with its 5° incidence. Candidates were kept to a range of cambers and a maximum thickness above 8mm at the 110mm chord, so the wing can be built from balsa and PLA with room for a spar. The thinnest of the 275 is 8.8mm.",
+                "The selection followed five steps, from operating conditions to a buildable airfoil:",
+                { list: [
+                    "<strong>Reynolds number</strong> 8 m/s level flight on the 110mm chord from 0 to 150 metres, giving Re 60,000",
+                    "<strong>Goal metric</strong> best Cl/Cd between 0° and 5°, the cruise window",
+                    "<strong>Camber and thickness</strong> a range of cambers and a maximum thickness above 8mm, which all 275 airfoils meet",
+                    "<strong>Polars at optimal angle</strong> Cl, Cl/Cd and the drag polar at each airfoil's best angle, with 273 ranked",
+                    "<strong>Fabrication and metrics</strong> the I.S.A. 960: 10.3mm thick, 5.7% camber, Cl/Cd 43.7 at 4.75°"
+                ] }
+            ] },
             "<strong>Versus the E205</strong> used up to Generation Nine, at each airfoil's best point in the cruise window and Re 60,000:",
             { list: [
                 "<strong>Drag</strong> Cd 0.0329 → 0.0228, about 31% lower",
@@ -148,47 +156,51 @@ const projects = {
             ] },
             { figure: "airfoils" },
             { figure: "polars" },
-            { heading: "CFD with PIFOAMUI" },
-            "The streamlining of both bodies was guided by CFD run through PIFOAMUI, a browser interface I built for OpenFOAM 13, the open-source CFD toolkit. It makes aerodynamic changes quick enough to test between builds, instead of writing OpenFOAM dictionaries and setting up each case by hand. So far, CFD has been run at level flight to compare Generation Nine with Generation X.",
-            { list: [
+            { heading: "PIFOAMUI: CFD fast enough to run between builds" },
+            "PIFOAMUI is a browser interface for OpenFOAM 13, the open-source CFD toolkit. It replaces writing OpenFOAM dictionaries and setting up each case by hand, so aerodynamic changes are quick enough to test between builds.",
+            "CFD run through PIFOAMUI guided the streamlining of both bodies. So far it has been run at level flight to compare Generation Nine with Generation X.",
+            { fold: "What PIFOAMUI does, from setup to report", text: [{ list: [
                 "<strong>Setup</strong> an STL and flow conditions: speed, angle of attack and yaw, ground, and half models on a symmetry plane, in Basic, Intermediate or Advanced mode",
                 "<strong>Meshing</strong> blockMesh and snappyHexMesh, with boundary layers sized by thickness or a y+ target; checkMesh quality check, retried at a finer level if meshing fails",
                 "<strong>Solving</strong> steady (SIMPLE) or transient (PIMPLE), with Spalart–Allmaras, k-ω SST or γ-Reθ turbulence models, in parallel over MPI, from a job queue that stops each run once it converges",
                 "<strong>Results</strong> force coefficients (Cd, Cl, Cm), residual plots, case comparison and a printable report",
-                "<strong>Studies</strong> parameter sweeps, mesh independence, aircraft polars, and neutral point and static margin",
-                "<strong>Stack</strong> a single Python file using only the standard library, so it serves its own page with no dependencies or build step"
-            ] },
-            "The source code is on GitHub under GPL-3.0: <a class=\"link\" href=\"https://github.com/BiscuitIV/PIFOAMUI\" target=\"_blank\" rel=\"noopener\">github.com/BiscuitIV/PIFOAMUI</a>",
-            { heading: "Custom ESC" },
-            "The first custom PCB is the ESC, designed from scratch in KiCad to drive the 2003.5 motor on 2S to 3S at up to 15A. Commutation is sensorless: each phase's back-EMF is compared against a virtual neutral, so the motor needs no Hall sensors.",
-            { list: [
+                "<strong>Studies</strong> parameter sweeps, mesh independence, aircraft polars, and neutral point and static margin"
+            ] }] },
+            "PIFOAMUI is open source on GitHub under GPL-3.0: <a class=\"link\" href=\"https://github.com/BiscuitIV/PIFOAMUI\" target=\"_blank\" rel=\"noopener\">github.com/BiscuitIV/PIFOAMUI</a>",
+            { heading: "A 15 A sensorless ESC, designed from scratch" },
+            "The ESC is the first custom PCB, designed from scratch in KiCad to drive the 2003.5 motor on 2S to 3S at up to 15A.",
+            "Commutation is sensorless: each phase's back-EMF is compared against a virtual neutral, so the motor needs no Hall sensors.",
+            { media: [{ src: "lws-x/ESC%20V1%20Schematic.png", width: 2339, height: 1654,
+                alt: "LWS X ESC V1 schematic: BEMF sensing, current sense, gate driver, LDO, MCU, power input, voltage sense, three half-bridges, connections and test points" }],
+                caption: `ESC V1 schematic in KiCad: sensing, gate driver, MCU and three half-bridges on one board · click to enlarge · <a class="link" href="lws-x/ESC%20V1%20Schematic.pdf" target="_blank" rel="noopener">PDF</a>` },
+            { fold: "Circuit details: control, power stage, sensing", text: [{ list: [
                 "<strong>Control</strong> STM32G0 microcontroller, powered by a TLV70433 3.3V regulator",
                 "<strong>Power stage</strong> FD6288T three-phase gate driver switching six MOSFETs as three half-bridges, with BAT54W bootstrap diodes supplying the high-side gates",
                 "<strong>Sensing</strong> back-EMF scaled through 10k/4.7k dividers; motor current from a 1mΩ shunt and INA181A3 amplifier; battery voltage from a divider",
                 "<strong>Input</strong> 470µF bulk capacitor with ceramic decoupling",
                 "<strong>Interfaces</strong> signal and telemetry pins, SWD for programming, and test points on every key net"
-            ] },
-            { media: [{ src: "lws-x/ESC%20V1%20Schematic.png", width: 2339, height: 1654,
-                alt: "LWS X ESC V1 schematic: BEMF sensing, current sense, gate driver, LDO, MCU, power input, voltage sense, three half-bridges, connections and test points" }],
-                caption: `LWS X ESC V1 schematic, KiCad · click to enlarge · <a class="link" href="lws-x/ESC%20V1%20Schematic.pdf" target="_blank" rel="noopener">PDF</a>` },
-            { heading: "Structure and Propulsion" },
-            "<strong>Airframe.</strong> Generation X splits the airframe into a front body and a rear body, joined by frame plates, so each body can be streamlined without compromising the joint between them. It is built from PLA and balsa, with carbon fibre under consideration. The wing moves from the first generation's 100mm chord at 0° incidence to a 110mm chord at 5°, and each of its two halves is 486mm wide.",
-            "<strong>Propulsion and power.</strong> A 2003.5 motor on a 2S to 3S 15A ESC drives a 7-inch 7x4.5 bi-blade propeller, up from the 6-inch propeller of the first three generations. The 2S 1200mAh battery stores about 8.9Wh for 56g: roughly 67% more energy than the earlier 2S 720mAh pack for 53% more weight. Custom PCBs replace off-the-shelf boards to save weight, and a flight controller is being added for more automation.",
+            ] }] },
+            { heading: "Split airframe, 7-inch prop, 67% more battery energy" },
+            "<strong>Airframe.</strong> Generation X splits the airframe into a front body and a rear body, joined by frame plates, so each body can be streamlined without compromising the joint between them. It is built from PLA and balsa, with carbon fibre under consideration.",
+            "<strong>Wing.</strong> The chord grows from the first generation's 100mm at 0° incidence to 110mm at 5°. Each of its two halves is 486mm wide.",
+            "<strong>Propulsion.</strong> A 2003.5 motor on a 2S to 3S 15A ESC drives a 7-inch 7x4.5 bi-blade propeller, up from the 6-inch propeller of the first three generations.",
+            "<strong>Power.</strong> The 2S 1200mAh battery stores about 8.9Wh for 56g: roughly 67% more energy than the earlier 2S 720mAh pack for 53% more weight. Custom PCBs replace off-the-shelf boards to save weight, and a flight controller is being added for more automation.",
             { media: [{ src: "lws-x/Airfoil.png", width: 1447, height: 675, alt: "CAD render of a wing rib with lightening cutouts" }],
-                caption: "Wing rib, CAD render, with lightening cutouts · click to enlarge" },
-            { heading: "Development History" },
-            "I had never flown an RC plane when the project began, so the early generations were as much about learning to fly as about the aircraft. Every revision was crash-tested, and the rule that came out of them still drives the design: remove weight wherever it does not serve flight.",
+                caption: "Wing rib in CAD, with lightening cutouts to save weight · click to enlarge" },
+            { heading: "Nine generations, from 263g to 216g" },
+            "I had never flown an RC plane when the project began, so the early generations were as much about learning to fly as about the aircraft. Every revision was crash-tested. The rule that came out of them still drives the design: remove weight wherever it does not serve flight.",
             { figure: "timeline" },
-            "<strong>Gen 1 · Tube glider.</strong> The first prototype used carbon fibre tubes for the wing and fuselage, so components could be repositioned to balance it. It was built within a month, crashed three times on a rough asphalt runway, and at 263g was already over the target; its tube fuselage lacked the stiffness to fly well.",
+            "<strong>Gen 1 · Tube glider.</strong> At 263g, the first prototype was already over the target. It used carbon fibre tubes for the wing and fuselage, so components could be repositioned to balance it. Built within a month, it crashed three times on a rough asphalt runway; its tube fuselage lacked the stiffness to fly well.",
             { media: [
                 { src: "lws-x/IMG20240903231440.jpg", width: 755, height: 1007, alt: "First-generation tube glider assembled on the floor, with 3D-printed ribs on carbon tubes, motor and landing gear" },
                 { src: "lws-x/web/gen1-v1-overview.mp4", width: 720, height: 1280, alt: "Walk-around of the first-generation glider: motor, landing gear, ribs, servos and tail" },
                 { src: "lws-x/web/gen1-v1-test.mp4", width: 720, height: 1280, alt: "Overhead ground test of the first-generation glider with its covered wing" }
-            ], caption: "Generation 1, the tube glider: assembled airframe, walk-around and ground test" },
-            "<strong>Gens 4–8 · Two-piece frame.</strong> Generations Four to Eight moved to a two-piece frame, one piece per side with the components housed inside, tested in cardboard, balsa and carbon fibre. Over those revisions a flap linkage replaced the string-and-pulley servo system, the wing mount became adjustable, a 2207 motor and 5g servos replaced the originals, and the ESC and receiver were stripped down.",
+            ], caption: "Generation 1, the 263g tube glider: assembled airframe, walk-around and ground test" },
+            "<strong>Gens 4–8 · Two-piece frame.</strong> Generations Four to Eight moved to a two-piece frame, one piece per side with the components housed inside, tested in cardboard, balsa and carbon fibre.",
+            "Over those revisions a flap linkage replaced the string-and-pulley servo system and the wing mount became adjustable. A 2207 motor and 5g servos replaced the originals, and the ESC and receiver were stripped down.",
             { media: [{ src: "lws-x/IMG20250119132358.jpg", width: 755, height: 1007, alt: "Blue 3D-printed tail surface with an integrated servo mount, held in hand" }],
                 caption: "3D-printed tail surface with integrated servo mount, two-piece frame era, January 2025 · click to enlarge" },
-            "<strong>Gen 9 · The Predecessor.</strong> Its balsa frame finally gave the right balance of stiffness and weight, bringing the plane under 250g at 216g.",
+            "<strong>Gen 9 · The Predecessor.</strong> At 216g, it brought the plane under 250g. Its balsa frame finally gave the right balance of stiffness and weight.",
             { media: [
                 { src: "lws-x/IMG20260624213924.jpg", width: 713, height: 951, alt: "The Predecessor mid-build on a table: red-covered wing, balsa frame, printed tail parts and transmitter" },
                 { src: "lws-x/IMG20260806213745.jpg", width: 713, height: 951, alt: "The Predecessor held in one hand, ready for a hand launch" }
@@ -197,28 +209,69 @@ const projects = {
                 caption: "The Predecessor in flight" },
             { media: [{ src: "lws-x/parts.jpg", width: 1600, height: 1067, alt: "Flat lay of 3D-printed parts from successive LWS generations, including frame plates, mounts and wheels" }],
                 caption: "3D-printed parts from successive LWS generations · click to enlarge" },
-            { heading: "Performance and Next Steps" },
+            { heading: "18% lighter, and level flight down to 7.83 m/s" },
             { list: [
                 "<strong>Mass</strong> 263g in the first generation → 216g in the Predecessor, 47g or about 18% lighter",
-                "<strong>Level flight</strong> 10.1 m/s for Generation Nine → 7.83 m/s so far for Generation X, against a cruise target of 7 m/s",
-                "<strong>Next</strong> further aerodynamic revision to bring the cruise speed down"
+                "<strong>Level flight</strong> 10.1 m/s for Generation Nine → 7.83 m/s so far for Generation X, against a cruise target of 7 m/s"
+            ] },
+            { heading: "Next: a 7 m/s cruise, a flight controller and the full payload" },
+            { list: [
+                "<strong>Cruise at 7 m/s</strong> further aerodynamic revision to bring level flight from 7.83 m/s down to the target",
+                "<strong>Flight controller</strong> being added for more automation",
+                "<strong>Lighter structure</strong> carbon fibre under consideration for the airframe, and custom PCBs replacing off-the-shelf boards",
+                "<strong>Payload and endurance</strong> fly the 40g payload of camera, video transmitter, flight controller and GPS, and test the 30-minute endurance target"
             ] }
         ]
     },
     "over-the-years": {
         title: "Over the Years",
+        thumb: "across-the-years/printer-complete.jpg",
+        tags: ["Aero", "CAD", "Electronics", "Fabrication"],
         date: "2022-2026",
         video: "",
         text: [
-            "<strong>Over the Years</strong> looks back at how my experience has grown across the disciplines I work in. [Introduction to be added.]",
-            { heading: "Mechanical Design and CAD" },
-            "[SolidWorks, Onshape and KiCad: where it started and how it developed.]",
-            { heading: "Fabrication" },
-            "[3D printing (FDM and MSLA, 500+ hours), laser cutting and soldering.]",
-            { heading: "Electronics" },
-            "[Circuits, PCB design and battery systems.]",
-            { heading: "Aerodynamics and Flight" },
-            "[RC aircraft, flying and simulation.]",
+            "<strong>Over the Years</strong> looks back at how my experience has grown across the disciplines I work in. [Introduction to be added: SolidWorks, Onshape and KiCad; FDM and MSLA printing (500+ hours), laser cutting and soldering; circuits, PCB design and battery systems; RC aircraft and simulation.]",
+            { heading: "Drones: from a micro quad in 2023 to a frame of my own" },
+            "<strong>Flight · CAD · aerodynamics.</strong> Drones came first. In 2023 I was flying small quadcopters, including a micro ducted quad off the hallway floor.",
+            { media: [
+                { src: "across-the-years/drone-quad.jpg", width: 1427, height: 951, alt: "Small carbon-frame quadcopter with a strapped battery on a wooden floor" },
+                { src: "across-the-years/web/drone-micro-2023.mp4", width: 800, height: 360, alt: "Micro ducted quadcopter lifting off a hallway floor" }
+            ], caption: "A small carbon quadcopter, and a micro ducted quad lifting off a hallway floor in March 2023" },
+            "<strong>A competition payload.</strong> As Head of Mechanical at d.Aviation, my high school club, I designed a servo-actuated mechanism that picks up and releases a tennis ball, carried on an S500 quadcopter. We placed 3rd of 12 teams at the 2023 STEM-ED Aero Robotics Competition.",
+            { media: [{ src: "across-the-years/web/drone-s500-hover.mp4", width: 1280, height: 576, alt: "The d.Aviation S500 quadcopter climbing and descending over a field with a load hanging on a line" }],
+                caption: "The d.Aviation S500 climbing and descending over a field, with a load slung on a line below" },
+            "<strong>My own frame.</strong> I then designed a quadcopter frame from scratch, built it and flew it. Stacked plates on standoffs hold the electronics, and cutouts in the plates and arms take out weight that does not carry load.",
+            { media: [
+                { src: "across-the-years/drone-frame-cad.png", width: 1305, height: 756, alt: "CAD line render of a quadcopter frame with stacked plates and four arms" },
+                { src: "across-the-years/drone-frame-render-v4.jpg", width: 3840, height: 2160, alt: "Rendered blue quadcopter frame with stacked plates on dark standoffs and triangular cutouts" }
+            ], caption: "Drone frame in CAD and rendered (Frame Render V4): stacked plates on standoffs, with lightening cutouts in the plates and arms · click to enlarge" },
+            { media: [{ src: "across-the-years/web/drone-frame-turntable.mp4", width: 1280, height: 720, alt: "Exploded-assembly animation of the blue quadcopter frame" }],
+                caption: "Exploded-assembly animation of the drone frame: plates, standoffs and fasteners" },
+            { heading: "3D printer: designed from scratch, built Nov 2025 to Mar 2026" },
+            "<strong>CAD · fabrication · electronics.</strong> I designed this printer myself in CAD, then sourced the parts and built it over four months.",
+            "The frame is aluminium extrusion, with twin lead screws lifting a belt-driven gantry. Printed brackets and feet tie it together, and a Raspberry Pi sits beside the main control board.",
+            { media: [{ src: "across-the-years/printer-cad.png", width: 883, height: 837, alt: "CAD line render of the 3D printer: aluminium extrusion frame, gantry, toolhead and lead screws" }],
+                caption: "CAD line render of the printer's aluminium extrusion frame, gantry and lead screws · click to enlarge" },
+            { media: [
+                { src: "across-the-years/printer-parts.jpg", width: 713, height: 951, alt: "3D printer parts laid out on a desk: black extrusions, steel rods, lead screws, four stepper motors, pulleys and hardware" },
+                { src: "across-the-years/printer-first-assembly.jpg", width: 713, height: 951, alt: "First assembly of the 3D printer frame with gantry, toolhead and control boards wired on a desk" },
+                { src: "across-the-years/printer-complete.jpg", width: 755, height: 1007, alt: "Completed 3D printer with green printed corner brackets and feet, Raspberry Pi and control board" }
+            ], caption: "The 3D printer from parts to finished machine: November 2025 parts, December first assembly, and complete with green printed parts in March 2026 · click to enlarge" },
+            "<strong>Vibration Tracker V1.0.</strong> To tune the printer's input shaping, I designed an accelerometer board in KiCad. Input shaping measures the frame's resonant frequencies and filters them out of the motion, so the printer can run faster without ringing in the prints.",
+            "The board carries an SPI accelerometer and a 1.8V regulator, and connects through six pads: 3.3V, ground and the four SPI lines.",
+            { media: [
+                { src: "across-the-years/vibration-tracker-3d.jpg", width: 713, height: 951, alt: "3D view of the green Vibration Tracker V1.0 board with two mounting holes and logo" },
+                { src: "across-the-years/vibration-tracker-layout.jpg", width: 1343, height: 1007, alt: "KiCad layout of the Vibration Tracker: accelerometer U1, regulator U2 and GND, CS, SCLK, MOSI, MISO and 3V3 pads" }
+            ], caption: "Vibration Tracker V1.0, the 3D printer's accelerometer board for input-shaping resonance tuning: an SPI accelerometer and 1.8V regulator, December 2025 · click to enlarge" },
+            { heading: "Radio dock: a paid commission for six Motorola T600 radios" },
+            "<strong>CAD · fabrication.</strong> A client paid me to design and print a dock that holds six Motorola T600 radios upright.",
+            "Each pocket is modelled around the radio's body, using the manufacturer's photo as the reference for its shape. The dock is split into two three-slot halves.",
+            { media: [{ src: "across-the-years/radio-dock-cad.png", width: 1060, height: 657, alt: "CAD line render of a six-slot radio dock in two three-slot halves" }],
+                caption: "CAD line render of the six-slot dock, split into two three-slot halves · click to enlarge" },
+            { media: [
+                { src: "across-the-years/radio-dock-printed.jpg", width: 713, height: 951, alt: "Blue printed six-slot dock on a wooden table holding a green Motorola radio" },
+                { src: "across-the-years/motorola-t600.webp", width: 723, height: 1280, alt: "Manufacturer product photo of the green Motorola T600 radio, side view" }
+            ], caption: "The printed radio dock in use, April 2026, beside the manufacturer's photo of the Motorola T600 it was designed around · click to enlarge" },
             { heading: "Programming" },
             "[MATLAB, Arduino, Betaflight and Claude Code.]",
             { heading: "Leadership and Teaching" },
@@ -231,6 +284,9 @@ const contact = [
     { label: "LinkedIn", href: "https://www.linkedin.com/in/pavlos-paparrizos/" },
     { label: "Email", href: "mailto:pavlos.paparrizos@gmail.com" }
 ];
+
+// The part the home panel shows when no index row is hovered
+const featured = "plane";
 
 const projectKeys = Object.keys(projects);
 const drawingNumber = key => String(projectKeys.indexOf(key) + 1).padStart(2, "0");
@@ -573,10 +629,10 @@ const figures = {
                 <label class="re-input"><span class="mono-data muted">Altitude <i>h</i></span><input type="range" min="0" max="150" step="5" value="0"><output class="mono-data"></output></label>
             </div>
             <dl class="cells re-values">
-                <div><dt class="mono-data muted">ρ density</dt><dd class="mono-data" data-out="rho"></dd></div>
-                <div><dt class="mono-data muted">μ viscosity</dt><dd class="mono-data" data-out="mu"></dd></div>
-                <div><dt class="mono-data muted">c chord</dt><dd class="mono-data">${WING_CHORD.toFixed(3)} m</dd></div>
-                <div class="re-total"><dt class="mono-data muted">Re</dt><dd class="mono-data" data-out="re" aria-live="polite"></dd></div>
+                <div class="stat"><dt class="mono-data muted">ρ density</dt><dd class="mono-data" data-out="rho"></dd></div>
+                <div class="stat"><dt class="mono-data muted">μ viscosity</dt><dd class="mono-data" data-out="mu"></dd></div>
+                <div class="stat"><dt class="mono-data muted">c chord</dt><dd class="mono-data">${WING_CHORD.toFixed(3)} m</dd></div>
+                <div class="stat re-total"><dt class="mono-data muted">Re</dt><dd class="mono-data" data-out="re" aria-live="polite"></dd></div>
             </dl>`,
             "Reynolds number of the Gen X wing, ISA standard atmosphere");
 
@@ -601,6 +657,17 @@ const figures = {
     }
 };
 
+// One label/value pair for a <dl>, as [dt, dd]
+function kvPair([label, value], dtClass, ddClass = dtClass) {
+    const dt = document.createElement("dt");
+    dt.className = dtClass;
+    dt.textContent = label;
+    const dd = document.createElement("dd");
+    dd.className = ddClass;
+    dd.textContent = value;
+    return [dt, dd];
+}
+
 function renderSpecs(container, { title, groups }) {
     container.querySelector(".section-head").textContent = `Spec sheet · ${title}`;
     container.querySelector(".spec-groups").replaceChildren(...groups.map(({ group, rows }) => {
@@ -611,15 +678,7 @@ function renderSpecs(container, { title, groups }) {
         head.textContent = group;
         const dl = document.createElement("dl");
         dl.className = "kv spec-rows";
-        rows.forEach(([label, value]) => {
-            const dt = document.createElement("dt");
-            dt.className = "mono-data";
-            dt.textContent = label;
-            const dd = document.createElement("dd");
-            dd.className = "mono-data";
-            dd.textContent = value;
-            dl.append(dt, dd);
-        });
+        dl.append(...rows.flatMap(row => kvPair(row, "mono-data")));
         cell.append(head, dl);
         return cell;
     }));
@@ -667,8 +726,45 @@ document.addEventListener("DOMContentLoaded", function () {
         $("tb-date").textContent = info ? info.date : "2026";
     }
 
-    // PREVIEW (shared by project rows and experience roles)
+    // PANEL: the featured part when idle; hovering or focusing an index row previews that part instead
     const card = $("frame-card");
+    const featuredLink = frame.querySelector(".frame-featured");
+    const featuredImage = featuredLink.querySelector("img");
+    const panelResults = $("panel-results");
+
+    function fillProjectCard(key, excerptText) {
+        const proj = projects[key];
+        const excerpt = document.createElement("p");
+        excerpt.className = "card-excerpt";
+        excerpt.textContent = excerptText;
+        $("card-meta").textContent = `Dwg no. ${drawingNumber(key)} · ${proj.date}`;
+        $("card-title").textContent = proj.title;
+        $("card-body").replaceChildren(excerpt);
+    }
+
+    // One part's image (or, without one, the excerpt card) and its first three results
+    function fillPanel(key, label) {
+        const proj = projects[key];
+        const image = proj.image || (proj.thumb && { src: proj.thumb, alt: "" });
+        frame.classList.toggle("has-preview", !image);
+        card.hidden = Boolean(image);
+        if (image) {
+            featuredImage.src = image.src;
+            featuredImage.alt = image.alt;
+            featuredLink.href = `#${key}`;
+            featuredLink.querySelector(".frame-caption").textContent = `${label} · ${proj.title} · Open →`;
+        } else {
+            // Strip the <strong> markup from the first paragraph
+            const excerpt = document.createElement("div");
+            excerpt.innerHTML = proj.text[0] || "";
+            fillProjectCard(key, excerpt.textContent);
+        }
+
+        const results = (proj.results || []).slice(0, 3);
+        panelResults.hidden = !results.length;
+        panelResults.innerHTML = results.map(([value, resultLabel]) => `
+            <li class="stat"><span class="title title-md upright">${value}</span><span class="result-label">${resultLabel}</span></li>`).join("");
+    }
 
     function activatePanel(info) {
         ++previewToken;
@@ -678,42 +774,24 @@ document.addEventListener("DOMContentLoaded", function () {
         $("dim-w").textContent = Math.round(width);
         $("dim-h").textContent = Math.round(height);
         frameWrap.classList.add("is-active");
-        frame.classList.add("has-preview");
         setTitleBlock(info);
         featuredVideo.classList.remove("visible");
-    }
-
-    function fillCard(meta, title, body, caption) {
-        $("card-meta").textContent = meta;
-        $("card-title").textContent = title;
-        $("card-body").replaceChildren(...body);
-        $("card-caption").textContent = caption;
-        $("card-caption").hidden = !caption;
-    }
-
-    function fillProjectCard(key, excerptText) {
-        const proj = projects[key];
-        const excerpt = document.createElement("p");
-        excerpt.className = "card-excerpt";
-        excerpt.textContent = excerptText;
-        fillCard(`Dwg no. ${drawingNumber(key)} · ${proj.date}`, proj.title, [excerpt], "Open →");
     }
 
     function showPreview(key) {
         const proj = projects[key];
         activatePanel({ title: proj.title, no: drawingNumber(key), date: proj.date });
         const token = previewToken;
-        card.hidden = Boolean(proj.video);
+        fillPanel(key, `Dwg ${drawingNumber(key)}`);
 
         if (!proj.video) {
-            // Strip the <strong> markup from the first paragraph
-            const excerpt = document.createElement("div");
-            excerpt.innerHTML = proj.text[0] || "";
-            fillProjectCard(key, excerpt.textContent);
             clearVideo(featuredVideo);
             return;
         }
 
+        // A clip covers the frame once it plays
+        frame.classList.add("has-preview");
+        card.hidden = true;
         videoTimeout = setTimeout(() => {
             featuredVideo.src = proj.video;
             featuredVideo.play()
@@ -733,68 +811,34 @@ document.addEventListener("DOMContentLoaded", function () {
         ++previewToken;
         clearTimeout(videoTimeout);
         frameWrap.classList.remove("is-active");
-        frame.classList.remove("has-preview");
         featuredVideo.classList.remove("visible");
-        card.hidden = true;
         setTitleBlock(null);
+        fillPanel(featured, "Featured");
 
         videoTimeout = setTimeout(() => clearVideo(featuredVideo), 300);
     }
 
-    // Experience role: the row's full dates, organisation and bullets are the single source for the card
-    function showRole(row) {
-        const years = row.querySelector("dt").textContent;
-        const title = row.querySelector(".entry-title").textContent;
+    fillPanel(featured, "Featured");
 
-        activatePanel({ title, no: "—", date: years });
-        fillCard(
-            `${row.dataset.dates} · ${row.querySelector(".entry-meta").textContent}`,
-            title,
-            [row.querySelector(".entry-points").cloneNode(true)],
-            ""
-        );
-        card.hidden = false;
-        clearVideo(featuredVideo);
-    }
-
-    // Role bullets move into the panel only where it can show them: a hover pointer and a frame tall enough
-    // for the longest role (Apperture's four bullets need about 1320x640). Touch, narrow or short screens,
-    // and no-JS, keep the bullets in the row.
-    const roles = document.querySelector(".roles");
-    const roleRows = roles.querySelectorAll(":scope > div");
-    const hoverDetails = matchMedia("(hover: hover) and (min-width: 1320px) and (min-height: 640px)");
-
-    function syncHoverDetails() {
-        roles.classList.toggle("hover-details", hoverDetails.matches);
-        // Rows without an organisation link still need a keyboard stop to open their card
-        roleRows.forEach(row => {
-            if (hoverDetails.matches) row.tabIndex = 0;
-            else row.removeAttribute("tabindex");
-        });
-    }
-
-    hoverDetails.addEventListener("change", syncHoverDetails);
-    syncHoverDetails();
-
-    // The whole row (date column and spacing included) is the hover target, so rows tile without gaps
-    roleRows.forEach(row => {
-        const show = () => { if (hoverDetails.matches) showRole(row); };
-        row.addEventListener("mouseenter", show);
-        row.addEventListener("mouseleave", hidePreview);
-        row.addEventListener("focusin", show);
-        row.addEventListener("focusout", hidePreview);
-    });
-
-    // GENERATE INDEX
-    projectKeys.forEach(key => {
+    // GENERATE INDEX: number, thumbnail (an empty grid-paper box without one), title, subtitle, outcome, tags, year.
+    // The thumbnail is decorative: the title already names the link
+    const rows = projectKeys.map(key => {
         const proj = projects[key];
         const li = document.createElement("li");
         const link = document.createElement("a");
         link.className = "part";
         link.href = `#${key}`;
         link.innerHTML = `
-            <span class="mono muted part-no">${drawingNumber(key)}</span>
-            <span><span class="title title-md link">${proj.title}</span>${proj.subtitle ? `<span class="muted entry-meta">${proj.subtitle}</span>` : ""}</span>
+            <span class="mono muted cue part-no">${drawingNumber(key)}</span>
+            ${proj.thumb
+                ? `<img class="part-thumb" src="${proj.thumb}" width="96" height="72" loading="lazy" alt="">`
+                : `<span class="part-thumb grid-paper" aria-hidden="true"></span>`}
+            <span>
+                <span class="title title-md upright link">${proj.title}</span>
+                ${proj.subtitle ? `<span class="muted entry-meta">${proj.subtitle}</span>` : ""}
+                ${proj.outcome ? `<span class="part-outcome">${proj.outcome}</span>` : ""}
+                ${proj.tags ? `<span class="mono muted part-tags">${proj.tags.join(" · ")}</span>` : ""}
+            </span>
             <span class="mono muted">${proj.date}</span>
         `;
 
@@ -805,7 +849,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
         li.appendChild(link);
         list.appendChild(li);
+        return { li, tags: proj.tags || [] };
     });
+
+    // DISCIPLINE FILTER: "All" plus every tag in first-seen order; rows without the chosen tag are hidden
+    const tags = [...new Set(rows.flatMap(row => row.tags))];
+    const filter = $("project-filter");
+    filter.hidden = !tags.length;
+    const chips = ["All", ...tags].map(tag => {
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "bare mono chip";
+        chip.textContent = tag;
+        chip.setAttribute("aria-pressed", String(tag === "All"));
+        chip.addEventListener("click", () => {
+            chips.forEach(other => other.setAttribute("aria-pressed", String(other === chip)));
+            rows.forEach(row => { row.li.hidden = tag !== "All" && !row.tags.includes(tag); });
+        });
+        return chip;
+    });
+    filter.append(...chips);
 
     // ROUTING (#project-key opens a project, anything else shows the index)
     const projectVideo = $("project-video");
@@ -831,20 +894,15 @@ document.addEventListener("DOMContentLoaded", function () {
         $("project-subtitle").hidden = !proj.subtitle;
         $("project-no").textContent = drawingNumber(key);
 
-        // Spec line: rows without a value are skipped
-        $("project-spec").replaceChildren(...[
-            ["Dwg no.", drawingNumber(key)],
-            ["Date", proj.date],
-            ["Role", proj.role],
+        // Summary: the 15-second read; rows without a value are skipped
+        $("project-summary").replaceChildren(...[
+            ["Problem", proj.problem],
+            ["My role", proj.role],
+            ["Timeline", proj.date],
             ["Tools", proj.tools]
-        ].filter(([, value]) => value).map(([label, value]) => {
+        ].filter(([, value]) => value).map(pair => {
             const row = document.createElement("div");
-            const dt = document.createElement("dt");
-            dt.className = "muted";
-            dt.textContent = label;
-            const dd = document.createElement("dd");
-            dd.textContent = value;
-            row.append(dt, dd);
+            row.append(...kvPair(pair, "mono", ""));
             return row;
         }));
 
@@ -852,7 +910,7 @@ document.addEventListener("DOMContentLoaded", function () {
         results.hidden = !proj.results;
         // Each result: [value, plain-language label, detail]
         results.innerHTML = (proj.results || []).map(([value, label, detail]) => `
-            <li><span class="title title-md">${value}</span><span class="result-label">${label}</span><span class="mono-data muted">${detail}</span></li>`).join("");
+            <li class="stat"><span class="title title-md upright">${value}</span><span class="result-label">${label}</span><span class="mono-data muted">${detail}</span></li>`).join("");
 
         $("project-figure").hidden = !proj.video && !proj.image;
         projectImage.hidden = !proj.image;
@@ -884,7 +942,8 @@ document.addEventListener("DOMContentLoaded", function () {
         descContainer.innerHTML = "";
         let figNo = 0;
         const sections = [];
-        proj.text.forEach(item => {
+        // A { fold } renders its own items inside <details>; headings stay top level, so Contents targets are never folded
+        function renderItem(item, container) {
             if (item.heading) {
                 const h = document.createElement("h3");
                 h.className = "subhead";
@@ -894,41 +953,66 @@ document.addEventListener("DOMContentLoaded", function () {
                 no.textContent = String(sections.length + 1).padStart(2, "0");
                 h.append(no, item.heading);
                 sections.push({ h, no: no.textContent, title: item.heading });
-                descContainer.appendChild(h);
+                container.appendChild(h);
+                return;
+            }
+            if (item.fold) {
+                const details = document.createElement("details");
+                details.className = "fold";
+                const summary = document.createElement("summary");
+                summary.className = "mono cue";
+                summary.textContent = item.fold;
+                const body = document.createElement("div");
+                body.className = "fold-body";
+                item.text.forEach(child => renderItem(child, body));
+                details.append(summary, body);
+                container.appendChild(details);
                 return;
             }
             if (item.list) {
                 const ul = document.createElement("ul");
-                ul.className = "prose-list";
+                ul.className = "marks prose-list";
                 // innerHTML allows the <strong> labels in the project data
                 ul.innerHTML = item.list.map(li => `<li>${li}</li>`).join("");
-                descContainer.appendChild(ul);
+                container.appendChild(ul);
                 return;
             }
             if (item.figure || item.media) {
                 const fig = item.figure ? figures[item.figure]() : mediaFigure(item.media, item.caption);
                 fig.querySelector("figcaption").prepend(`Fig. ${++figNo} — `);
-                descContainer.appendChild(fig);
+                container.appendChild(fig);
                 return;
             }
             const p = document.createElement("p");
             // innerHTML allows the <strong> lead-ins in the project data
             p.innerHTML = item;
-            descContainer.appendChild(p);
-        });
+            container.appendChild(p);
+        }
+        proj.text.forEach(item => renderItem(item, descContainer));
+
+        // Next part: the following drawing, wrapping to the first, so readers keep going
+        if (projectKeys.length > 1) {
+            const next = projectKeys[(projectKeys.indexOf(key) + 1) % projectKeys.length];
+            const nextLink = document.createElement("a");
+            nextLink.className = "next-part";
+            nextLink.href = `#${next}`;
+            nextLink.innerHTML = `<span class="mono muted cue">Next &middot; Dwg ${drawingNumber(next)}</span><span class="title title-md upright"><span class="link"></span> &rarr;</span>`;
+            nextLink.querySelector(".link").textContent = projects[next].title;
+            descContainer.appendChild(nextLink);
+        }
 
         // Contents: buttons rather than #anchors, since the hash selects the project
         if (sections.length >= 3) {
             const nav = document.createElement("nav");
             nav.className = "toc";
             nav.setAttribute("aria-label", "Contents");
-            nav.innerHTML = `<p class="mono muted section-head">Contents</p><ol class="toc-list"></ol>`;
+            nav.innerHTML = `<p class="mono section-head">Contents</p><ol class="toc-list"></ol>`;
             nav.querySelector("ol").append(...sections.map(({ h, no, title }) => {
                 const li = document.createElement("li");
                 const button = document.createElement("button");
                 button.type = "button";
-                button.className = "toc-item";
-                button.innerHTML = `<span class="mono muted">${no}</span><span class="link"></span>`;
+                button.className = "bare toc-item";
+                button.innerHTML = `<span class="mono muted cue">${no}</span><span class="link"></span>`;
                 button.lastChild.textContent = title;
                 button.addEventListener("click", () => {
                     h.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth" });

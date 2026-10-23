@@ -22,65 +22,65 @@
                 </dl>
             </header>
 
+            <main class="index" aria-labelledby="projects-head">
+                <h2 class="mono section-head" id="projects-head">Projects</h2>
+                <div class="filter" id="project-filter" role="group" aria-label="Filter projects by discipline"></div>
+                <div class="mono muted index-head" aria-hidden="true">
+                    <span>No.</span><span></span><span>Part</span><span>Year</span>
+                </div>
+                <ol class="index-list" id="project-links-container"></ol>
+            </main>
+
             <section aria-labelledby="education-head">
-                <h2 class="mono muted section-head" id="education-head">Education</h2>
+                <h2 class="mono section-head" id="education-head">Education</h2>
                 <dl class="kv rows">
                     <div>
                         <dt class="mono">2026&ndash;30</dt>
                         <dd>
-                            <span class="title entry-title">University of Maryland, College Park</span>
+                            <span class="title upright entry-title">University of Maryland, College Park</span>
                             <span class="muted entry-meta">B.S. Mechanical Engineering</span>
                         </dd>
                     </div>
                     <div>
                         <dt class="mono">2026</dt>
                         <dd>
-                            <span class="title entry-title">Design Tech High School @ Oracle</span>
+                            <span class="title upright entry-title">Design Tech High School @ Oracle</span>
                             <span class="muted entry-meta">Redwood City, California &middot; GPA 4.32</span>
                         </dd>
                     </div>
                 </dl>
             </section>
 
-            <main class="index" aria-labelledby="projects-head">
-                <h2 class="mono muted section-head" id="projects-head">Projects</h2>
-                <div class="mono muted index-head" aria-hidden="true">
-                    <span>No.</span><span>Part</span><span>Year</span>
-                </div>
-                <ol class="index-list" id="project-links-container"></ol>
-            </main>
-
             <section aria-labelledby="experience-head">
-                <h2 class="mono muted section-head" id="experience-head">Experience</h2>
-                <!-- Roles: on hover-capable desktops the bullets move into the panel card, along with data-dates -->
-                <dl class="kv rows roles">
-                    <div data-dates="Sep 2026 &ndash; Present">
+                <h2 class="mono section-head" id="experience-head">Experience</h2>
+                <dl class="kv rows">
+                    <div>
                         <dt class="mono">2026&ndash;Now</dt>
                         <dd>
-                            <span class="title entry-title">Electrical Team Member</span>
+                            <span class="title upright entry-title">Electrical Team Member</span>
                             <span class="muted entry-meta"><a class="link" href="https://racing.umd.edu/formula-ev" target="_blank" rel="noopener">Terps Racing Electric Vehicle</a></span>
-                            <ul class="entry-points">
+                            <ul class="marks entry-points">
                                 <li>Designing a SolidWorks enclosure for a 4S LFP battery pack powering the low-voltage circuitry</li>
                                 <li>Redesigning HV battery charger to cut required outlets from 3 to 1 and add Raspberry Pi data logging</li>
                             </ul>
                         </dd>
                     </div>
-                    <div data-dates="Jun &ndash; Aug 2026">
+                    <div>
                         <dt class="mono">2026</dt>
                         <dd>
-                            <span class="title entry-title">Summer Camp Assistant</span>
+                            <span class="title upright entry-title">Summer Camp Assistant</span>
                             <span class="muted entry-meta"><a class="link" href="https://www.hiller.org" target="_blank" rel="noopener">Hiller Aviation Museum</a></span>
-                            <ul class="entry-points">
+                            <ul class="marks entry-points">
                                 <li>Ran activities for 20+ campers and assisted instructors in STEM-focused aviation programs</li>
                             </ul>
                         </dd>
                     </div>
-                    <div data-dates="Sep 2025 &ndash; Aug 2026">
+                    <div>
                         <dt class="mono">2025&ndash;26</dt>
                         <dd>
-                            <span class="title entry-title">Prototype Engineer</span>
+                            <span class="title upright entry-title">Prototype Engineer</span>
                             <span class="muted entry-meta">Apperture S&agrave;rl &middot; Remote</span>
-                            <ul class="entry-points">
+                            <ul class="marks entry-points">
                                 <li>Rebuilt 10+ legacy Rhino models of wearable products as parametric, editable Onshape CAD</li>
                                 <li>Designed toleranced functional parts (bezels, strap clips) for FDM/MSLA printing</li>
                                 <li>Ran MSLA production for 50+ batches end to end, from slicing to inspection</li>
@@ -88,12 +88,12 @@
                             </ul>
                         </dd>
                     </div>
-                    <div data-dates="Sep 2022 &ndash; Aug 2024">
+                    <div>
                         <dt class="mono">2022&ndash;24</dt>
                         <dd>
-                            <span class="title entry-title">Head of Mechanical</span>
+                            <span class="title upright entry-title">Head of Mechanical</span>
                             <span class="muted entry-meta">d.Aviation (High School Club)</span>
-                            <ul class="entry-points">
+                            <ul class="marks entry-points">
                                 <li>Designed a servo-actuated tennis ball intake and release mechanism; placed 3rd of 12 teams at the 2023 STEM-ED Aero Robotics Competition</li>
                                 <li>Led and trained a 5-person mechanical team; handled field repairs and firmware debugging at competition</li>
                             </ul>
@@ -103,44 +103,69 @@
             </section>
 
             <section aria-labelledby="skills-head">
-                <h2 class="mono muted section-head" id="skills-head">Skills</h2>
-                <dl class="kv rows">
+                <h2 class="mono section-head" id="skills-head">Skills</h2>
+                <dl class="kv rows skills">
                     <div>
                         <dt class="mono">CAD</dt>
-                        <dd><ul class="tags"><li>SolidWorks</li><li>Onshape</li><li>KiCad</li></ul></dd>
+                        <dd><ul class="tags">
+                            <li class="mono-data chip">SolidWorks</li>
+                            <li class="mono-data chip">Onshape</li>
+                        </ul></dd>
                     </div>
                     <div>
-                        <dt class="mono">Making</dt>
-                        <dd><ul class="tags"><li>3D Printing (FDM &amp; MSLA, 500+ hours)</li><li>Laser Cutting</li><li>Soldering</li></ul></dd>
+                        <dt class="mono">Electronics</dt>
+                        <dd><ul class="tags">
+                            <li class="mono-data chip">Altium</li>
+                            <li class="mono-data chip">KiCad</li>
+                            <li class="mono-data chip">Soldering</li>
+                        </ul></dd>
+                    </div>
+                    <div>
+                        <dt class="mono">Analysis</dt>
+                        <dd><ul class="tags">
+                            <li class="mono-data chip">OpenFOAM (CFD)</li>
+                        </ul></dd>
+                    </div>
+                    <div>
+                        <dt class="mono">Fabrication</dt>
+                        <dd><ul class="tags">
+                            <li class="mono-data chip">3D printing &middot; FDM &amp; MSLA &middot; 500+ h</li>
+                            <li class="mono-data chip">Laser cutting</li>
+                        </ul></dd>
                     </div>
                     <div>
                         <dt class="mono">Code</dt>
-                        <dd><ul class="tags"><li>MATLAB</li><li>Arduino IDE</li><li>Betaflight</li><li>Claude Code</li></ul></dd>
+                        <dd><ul class="tags">
+                            <li class="mono-data chip">MATLAB</li>
+                            <li class="mono-data chip">Arduino IDE</li>
+                            <li class="mono-data chip">Betaflight</li>
+                            <li class="mono-data chip">Claude Code</li>
+                        </ul></dd>
                     </div>
                 </dl>
             </section>
 
             <section aria-labelledby="activities-head">
-                <h2 class="mono muted section-head" id="activities-head">Activities</h2>
+                <h2 class="mono section-head" id="activities-head">Activities</h2>
                 <dl class="kv rows">
                     <div>
                         <dt class="mono">250+ hrs</dt>
                         <dd>
-                            <span class="title entry-title">Volunteer &middot; Hiller Aviation Museum</span>
+                            <span class="title upright entry-title">Volunteer &middot; Hiller Aviation Museum</span>
                             <span class="muted entry-desc">Supported the summer camp program&rsquo;s inventory and volunteer systems; set up activities and kept workspaces organized.</span>
                         </dd>
                     </div>
                     <div>
                         <dt class="mono">75+ hrs</dt>
                         <dd>
-                            <span class="title entry-title">Teaching Assistant &middot; Fanari Academy</span>
+                            <span class="title upright entry-title">Teaching Assistant &middot; Fanari Academy</span>
                             <span class="muted entry-desc">Supported classroom instruction and helped students with coursework.</span>
                         </dd>
                     </div>
                     <div>
                         <dt class="mono">75+ hrs</dt>
                         <dd>
-                            <span class="title entry-title">Volunteer &middot; Samaritan House</span>
+                            <span class="title upright entry-title">Volunteer &middot; Samaritan House</span>
                             <span class="muted entry-desc">Food delivery, meal prep, stocking and direct distribution to families facing food insecurity.</span>
                         </dd>
                     </div>
@@ -156,32 +181,33 @@
                     <span class="dim dim-x" aria-hidden="true"><i class="dim-line"></i><span class="dim-label" id="dim-w"></span></span>
                     <span class="dim dim-y" aria-hidden="true"><i class="dim-line"></i><span class="dim-label" id="dim-h"></span></span>
                     <div class="frame" id="frame">
-                        <!-- Idle state: the featured project. Preview state: video or spec card. -->
-                        <a class="frame-note frame-featured" href="#plane">
-                            <img src="lws-x/Velocity Picture 3.png" width="1600" height="772"
-                                alt="Velocity magnitude contour of the Generation X airframe">
-                            <span class="mono frame-caption">Featured &middot; LWS X, sub-250 g RC plane &middot; Open &rarr;</span>
+                        <!-- Filled by script.js: the featured part when idle, the hovered part while previewing.
+                             A part with an image fills the link; one without gets the excerpt card; a video covers both. -->
+                        <a class="frame-note frame-featured">
+                            <img alt="">
+                            <span class="mono chip cue frame-caption"></span>
                         </a>
                         <div class="frame-card" id="frame-card" hidden>
                             <p class="mono muted frame-label" id="card-meta"></p>
-                            <p class="title title-lg card-title" id="card-title"></p>
+                            <p class="title title-lg upright card-title" id="card-title"></p>
                             <div class="card-body" id="card-body"></div>
-                            <p class="mono muted frame-caption" id="card-caption"></p>
+                            <p class="mono muted frame-caption">Open &rarr;</p>
                         </div>
                         <video id="featured-video" muted loop playsinline></video>
                     </div>
                 </div>
+                <ul class="cells results panel-results" id="panel-results" aria-label="Key results" hidden></ul>
             </div>
 
             <div class="cells title-block">
-                <div class="tb-cell tb-wide">
+                <div class="stat tb-cell tb-wide">
                     <span class="mono muted">Title</span>
                     <span class="title tb-title" id="tb-title" aria-live="polite">Portfolio index</span>
                 </div>
-                <div class="tb-cell"><span class="mono muted">Dwg no.</span><span class="mono-data tb-value" id="tb-no">00</span></div>
-                <div class="tb-cell"><span class="mono muted">Date</span><span class="mono-data tb-value" id="tb-date">2026</span></div>
-                <div class="tb-cell"><span class="mono muted">Drawn by</span><span class="mono-data tb-value">P. Paparrizos</span></div>
-                <div class="tb-cell tb-wide"><span class="mono muted">Contact</span><span class="mono-data tb-value contact-links"></span></div>
+                <div class="stat tb-cell"><span class="mono muted">Dwg no.</span><span class="mono-data tb-value" id="tb-no">00</span></div>
+                <div class="stat tb-cell"><span class="mono muted">Date</span><span class="mono-data tb-value" id="tb-date">2026</span></div>
+                <div class="stat tb-cell"><span class="mono muted">Drawn by</span><span class="mono-data tb-value">P. Paparrizos</span></div>
+                <div class="stat tb-cell tb-wide"><span class="mono muted">Contact</span><span class="mono-data tb-value contact-links"></span></div>
             </div>
         </section>
     </div>
@@ -198,7 +224,7 @@
                 <p class="title title-md muted project-subtitle" id="project-subtitle" hidden></p>
             </header>
             <div class="project-grid">
-                <dl class="spec mono" id="project-spec"></dl>
+                <dl class="kv summary" id="project-summary" aria-label="Summary"></dl>
                 <div class="project-content">
                     <ul class="cells results" id="project-results" aria-label="Key results" hidden></ul>
                     <figure class="project-figure" id="project-figure" hidden>
@@ -209,7 +235,7 @@
                         <figcaption class="mono muted" id="project-caption"></figcaption>
                     </figure>
                     <section class="spec-sheet" id="project-specs" aria-labelledby="specs-head" hidden>
-                        <h3 class="mono muted section-head" id="specs-head"></h3>
+                        <h3 class="mono section-head" id="specs-head"></h3>
                         <div class="cells spec-groups"></div>
                     </section>
                     <div class="prose" id="project-description-container"></div>
