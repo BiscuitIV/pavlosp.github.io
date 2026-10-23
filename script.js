@@ -4,7 +4,7 @@ const WING_CHORD = 0.11; // m, Generation X
 // Profiles normalized to chord = 1 (TE → upper → LE → lower → TE), cosine-resampled to 35 stations
 // per surface: E205 from the UIUC Airfoil Coordinates Database, I.S.A. 960 from the batch run's
 // simulated geometry (trailing edge closed, repanelled by XFoil).
-// polar: [α°, Cl, Cd], own XFoil 6.99 batch run at Re 60,000, Ncrit 9, 160 panels, α −5° to 12°;
+// polar: [α°, Cl, Cd], XFoil 6.99 batch run at Re 60,000, Ncrit 9, 160 panels, α −5° to 15° (polars stored to 12°);
 // gaps are angles where XFoil did not converge. cl/cd: the best-Cl/Cd point for α 0–5° (cruise window)
 const airfoils = [
     {
@@ -50,9 +50,23 @@ const projects = {
     },
     "plane": {
         title: "LWS X",
+        subtitle: "Sub-250 g endurance RC plane",
         date: "2024-2026",
+        role: "Personal project · design, build, flight test",
+        tools: "Onshape · KiCad · XFoil · OpenFOAM · Python · 3D printing",
+        results: [
+            ["−18%", "Lighter airframe", "263 g (Gen 1) → 216 g (Gen 9)"],
+            ["2.2×", "Higher wing lift-to-drag", "19.8 → 43.7, E205 → I.S.A. 960 airfoil"],
+            ["7.83 m/s", "Level-flight speed", "Gen X, down from 10.1 m/s (target 7)"],
+            ["275", "Airfoils simulated and ranked", "Batch XFoil 6.99 run at Re 60,000"],
+            ["15 A", "Custom motor controller", "Sensorless ESC, STM32G0, KiCad"]
+        ],
         video: "",
-        image: "Velocity Picture.png",
+        image: {
+            src: "lws-x/Velocity Picture 3.png",
+            alt: "Velocity magnitude contour of the Generation X airframe",
+            caption: "CFD velocity magnitude around the Generation X airframe in level flight, OpenFOAM via PIFOAMUI"
+        },
         specs: {
             title: "Generation X",
             groups: [
@@ -84,7 +98,7 @@ const projects = {
                 ] },
                 { group: "Mission", rows: [
                     ["Cruise target", "7 m/s"],
-                    ["Level flight", "8.34 m/s (current)"],
+                    ["Level flight", "7.83 m/s (current)"],
                     ["Payload", "≥ 40 g, ≥ 5 W"],
                     ["Endurance", "≥ 30 min @ 15 °C"],
                     ["Altitude", "0–150 m"]
@@ -92,46 +106,123 @@ const projects = {
             ]
         },
         text: [
-            "<strong>The Low Weight System (LWS)</strong> began in 2024 with a clear target: a radio-controlled plane with a one-metre wingspan that weighed under 250 grams. I had never flown an RC plane before. The early versions were as much a learning process as an aircraft project. Across nine generations and the current Generation X, the design went from a tube glider that flew for about three seconds to a two-piece airframe built around one principle: remove weight wherever it does not serve flight.",
-            { heading: "Generation One: The Tube Glider" },
-            "The first design used two carbon fibre tubes for the wing, joined perpendicularly to two more tubes that formed the fuselage. The tubes allowed components to be attached and repositioned easily, which mattered for keeping the aircraft balanced. The airfoil was the E205, a profile commonly used on gliders. The wing had a 100mm chord and was mounted at 0° angle of incidence.",
-            "Power came from a bulky 2814 brushless motor, a 30A ESC weighing 32g, and a 6-inch propeller. I tested 2S and 3S batteries before settling on a 2S 720mAh LiPo with a nominal voltage of 7.6V. I also designed 3D-printed wheels and experimented with compressible wheels for landing.",
-            "The first prototype was built within a month. I crashed it three times on a rough asphalt runway, then made it lighter, reinforced specific areas, and kept iterating. At 263g, it was already over the 250g target. It flew for only about three seconds before nose-diving. The lesson was clear: a tubular fuselage lacked the structural integrity to fly well.",
-            { heading: "Generations Four to Eight: The Two-Piece Frame" },
-            "The next generations used a two-piece frame, built from tubes or balsa wood, with one piece per side and all internal components housed inside. I evaluated cardboard, balsa wood, and carbon fibre for the structure. Each revision kept the original function of each part: the string-and-pulley servo system was replaced with a flap linkage system as part of the frame composition upgrade, and the wing mount was made adjustable, and a 2207 drone motor replaced the original motor. Starting with Generation Four, the servos were switched from 9g to 5g units to save weight.",
-            "Flight times in this range were measured in seconds, and the main failure was crashing, largely because I was still learning to fly. Weight decreased with each generation, though I don't have exact figures for every one. Over the following generations, components were strengthened, the battery was repositioned, the outer shapes were refined for better aerodynamics, a lighter ESC was adopted, and a stripped-down receiver was used to save weight. This sequence of crash-tested revisions produced the modern plane.",
-            { heading: "Generation Nine: The Predecessor" },
-            "The Predecessor is the ninth generation of the LWS. Its final frame is built from balsa, which gave the right balance of stiffness and weight for this airframe. At 216g, it came in under the 250g target. Its ESC weighs 10g, down from 32g for the original ESC.",
-            { heading: "Generation X: Front and Rear Body" },
-            "Generation X splits the airframe into two sections: a front body and a rear body. Frame plates connect the two, and each body is streamlined for performance without compromising the joint between them.",
-            { heading: "Generation X: Development" },
-            "Generation X is currently in development. It is built from PLA and balsa, with carbon fibre under consideration, and it uses custom PCBs designed from scratch. The main goal is to bring the weight down while still carrying a useful payload. The modern design uses a 5° angle of incidence and a 110mm chord, compared with 0° and 100mm in the first generation. The newest battery is a 2S 1200mAh pack with a nominal voltage of 7.4V, storing about 8.9Wh and weighing 56g. The earlier 2S 720mAh pack stored about 5.3Wh and weighed 36.5g. The new pack holds about 3.6Wh more, roughly 67% more energy, for 19.5g more weight, about 53% heavier. Energy per gram improves slightly, from about 0.15Wh/g to 0.16Wh/g.",
-            "The design requirements are: the aircraft must weigh under 250g including battery and payload; carry at least 40g of electronics (camera, video transmitter, flight controller, and GPS) in a protected bay; and power those electronics with at least 5W. It should fly at least 30 minutes at 15°C and 15 minutes at 0°C with full payload, cruise steadily at about 7 m/s, and be thrown by hand by one person.",
-            "It should also swap batteries in under a minute without tools, fit in a backpack, be ready to fly within five minutes, and operate between 0 and 150 metres. The airframe and propulsion should cost under $250, excluding electronics. Regulatory and safety requirements, including frequency selection for FPV, lighting for night flying, and privacy and local laws, are being reviewed alongside the design.",
-            "The target weight for Generation X is 210g, and the 250g limit still applies. Compared with the 6-inch propeller used in the first three generations, it uses a 7-inch 7x4.5 Bi-Blade propeller, driven by a 2003.5 motor and a 2S to 3S 15A ESC. Its two wings are each 486mm wide. The custom PCBs are designed to provide optimal electronic functionality while saving weight, and a flight controller is being added for a larger feature set and more automation.",
-            { heading: "Generation X: Custom ESC" },
-            "The first of the custom PCBs is the ESC, designed from scratch in KiCad to drive the 2003.5 motor on 2S to 3S at up to 15A. An STM32G0 microcontroller, powered by a TLV70433 3.3V regulator, commands an FD6288T three-phase gate driver. The driver switches six MOSFETs arranged as three half-bridges, with BAT54W bootstrap diodes supplying the high-side gates.",
-            "Commutation is sensorless. Each phase's back-EMF is scaled through a 10k/4.7k divider and compared against a virtual neutral, so the motor needs no Hall sensors. A 1mΩ shunt with an INA181A3 amplifier measures motor current, a divider measures battery voltage, and a 470µF bulk capacitor with ceramic decoupling steadies the input. The board brings out signal and telemetry pins, SWD for programming, and test points on every key net. [Firmware, board mass and dimensions to be added.]",
-            { figure: "esc" },
-            { heading: "Aerodynamic Design Tool" },
-            "The streamlining of both bodies was guided by CFD through a GUI I developed on top of OpenFOAM, the open-source CFD toolkit. The goal was to make aerodynamic adjustments quick enough to iterate on between builds, rather than relying on slow, manual simulation setup. So far, CFD analysis has been run at level flight and compares only Generation Nine and Generation X.",
+            "<strong>LWS X</strong> is the current generation of the Light-Weight System (LWS), a radio-controlled plane I have designed, built and flown since 2024. The brief has not changed: a one-metre-class wingspan for under 250 grams, including battery and payload. Across nine generations the plane went from a 263g tube glider that flew for three seconds to the 216g Predecessor, and Generation X is built on a batch XFoil pipeline that ranked 275 airfoils, a browser interface for OpenFOAM CFD that I built, and a custom motor controller.",
+            { heading: "Design Requirements" },
+            "Generation X must meet the first four requirements; the rest keep it practical in the field.",
+            { list: [
+                "<strong>Mass</strong> under 250g including battery and payload, 210g target",
+                "<strong>Payload</strong> at least 40g of electronics (camera, video transmitter, flight controller, GPS) in a protected bay, powered with at least 5W",
+                "<strong>Endurance</strong> 30 minutes at 15°C and 15 minutes at 0°C with full payload",
+                "<strong>Flight</strong> steady cruise at about 7 m/s, hand-launched by one person",
+                "<strong>Field use</strong> tool-free battery swap in under a minute, fits in a backpack, ready to fly within five minutes, operates from 0 to 150 metres",
+                "<strong>Cost</strong> under $250 for airframe and propulsion, excluding electronics"
+            ] },
+            "Regulatory and safety requirements, including FPV frequency selection, lighting for night flying, and privacy and local laws, are being reviewed alongside the design.",
             { heading: "Airfoil Selection" },
-            "Flight testing showed that the speed needed for level flight is closer to 8 m/s than the 7 m/s cruise target. With the 110mm chord, 8 m/s gives a Reynolds number of about 60,300 at sea level and about 59,500 at 150 metres in the standard atmosphere, so I averaged the design Reynolds number at 60,000 across the operating envelope.",
+            "<strong>Design Reynolds number.</strong> Flight testing showed level flight needs closer to 8 m/s than the 7 m/s cruise target. At 8 m/s on the 110mm chord, Re is about 60,300 at sea level and 59,500 at 150 metres in the standard atmosphere, so the design Re is 60,000 across the operating envelope.",
             { figure: "reynolds" },
-            "To choose the airfoil, I wrote a batch pipeline around XFoil 6.99, the panel-method solver that airfoiltools.com also uses. It downloads each airfoil's coordinates from airfoiltools, the UIUC Airfoil Coordinates Database, or the AeroSandbox database, converts every file to one format, closes blunt trailing edges that XFoil would otherwise under-predict, and sweeps each section from −5° to 15° at Re 60,000. I ran 275 airfoils through it and ranked them in an interactive tool. The selection followed five steps: find the Reynolds number from the operating environment, choose a metric based on the operational goal, filter by camber and thickness, compare the polars at their optimal angles of attack, and choose the airfoil based on fabrication feasibility and the goal metrics.",
-            { figure: "pipeline" },
-            "The metric was the best lift-to-drag ratio (Cl/Cd) between 0° and 5°, the angles the wing actually sees in cruise with its 5° incidence. Every candidate was kept to a range of cambers and a maximum thickness of more than 8mm at the 110mm chord, so the wing can be built from balsa and PLA with room for a spar. The thinnest of the 275 is 8.8mm.",
+            "<strong>Pipeline.</strong> A batch pipeline around XFoil 6.99, the panel-method solver that airfoiltools.com also uses, ran 275 airfoils within these boundaries:",
+            { list: [
+                "<strong>Sources</strong> coordinates from airfoiltools, the UIUC Airfoil Coordinates Database or the AeroSandbox database",
+                "<strong>Geometry</strong> every file converted to Selig format, with 27 blunt trailing edges closed so XFoil does not under-predict them",
+                "<strong>Solver</strong> Re 60,000, Ncrit 9, 160 panels",
+                "<strong>Sweep</strong> α −5° to 15° in 0.25° steps, 21,023 converged points",
+                "<strong>Output</strong> polars and cruise-window metrics, ranked in an interactive tool to sort, filter and compare polars"
+            ] },
+            "The selection then followed five steps, from operating conditions to a buildable airfoil:",
+            { list: [
+                "<strong>Reynolds number</strong> 8 m/s level flight on the 110mm chord from 0 to 150 metres, giving Re 60,000",
+                "<strong>Goal metric</strong> best Cl/Cd between 0° and 5°, the cruise window",
+                "<strong>Camber and thickness</strong> a range of cambers and a maximum thickness above 8mm, which all 275 airfoils meet",
+                "<strong>Polars at optimal angle</strong> Cl, Cl/Cd and the drag polar at each airfoil's best angle, with 273 ranked",
+                "<strong>Fabrication and metrics</strong> the I.S.A. 960: 10.3mm thick, 5.7% camber, Cl/Cd 43.7 at 4.75°"
+            ] },
+            "<strong>Metric and filters.</strong> The metric was the best lift-to-drag ratio (Cl/Cd) between 0° and 5°, the angles the wing actually sees in cruise with its 5° incidence. Candidates were kept to a range of cambers and a maximum thickness above 8mm at the 110mm chord, so the wing can be built from balsa and PLA with room for a spar. The thinnest of the 275 is 8.8mm.",
             { figure: "sweep" },
-            "Generation X uses the I.S.A. 960. It scores 43.7 at 4.75°, fourth of the 273 airfoils that converged in the cruise window and within 3% of the best score of 45.0. At 10.3mm thick with 5.7% camber, it is thicker than the two MID 108 sections that score higher, which are 9.2mm thick, and its best point falls inside the cruise window rather than at its edge.",
-            "Compared with the E205 used up to Generation Nine, at each airfoil's best point in the cruise window and Re 60,000, the drag coefficient (Cd) drops from 0.0329 to 0.0228, about 31% lower, and the lift coefficient (Cl) rises from 0.651 to 0.998, about 53% higher. The best section lift-to-drag ratio improves from 19.8 to 43.7, about 2.2 times higher.",
+            "<strong>Choice: I.S.A. 960.</strong> It scores 43.7 at 4.75°, fourth of the 273 airfoils that converged in the cruise window and within 3% of the best score of 45.0. The two MID 108 sections that score higher are 9.2mm thick; the I.S.A. 960 is 10.3mm thick with 5.7% camber, and its best point falls inside the cruise window rather than at its edge.",
+            "<strong>Versus the E205</strong> used up to Generation Nine, at each airfoil's best point in the cruise window and Re 60,000:",
+            { list: [
+                "<strong>Drag</strong> Cd 0.0329 → 0.0228, about 31% lower",
+                "<strong>Lift</strong> Cl 0.651 → 0.998, about 53% higher",
+                "<strong>Lift-to-drag</strong> Cl/Cd 19.8 → 43.7, about 2.2 times higher"
+            ] },
             { figure: "airfoils" },
             { figure: "polars" },
-            { heading: "CFD GUI: PIFOAMUI" },
-            "PIFOAMUI is the GUI behind the CFD work: a browser interface for running OpenFOAM 13 external-aerodynamics cases on an STL part, without writing OpenFOAM dictionaries by hand. It is a single Python file using only the standard library, so it serves its own page with no dependencies or build step.",
-            "A case starts from an STL and flow conditions: speed, angle of attack and yaw, ground, and half models on a symmetry plane. The GUI meshes with blockMesh and snappyHexMesh, adding boundary layers sized by thickness or a y+ target, then checks quality with checkMesh and retries at a finer level if meshing fails. It solves steady (SIMPLE) or transient (PIMPLE) flow with Spalart–Allmaras, k-ω SST or γ-Reθ turbulence models, in parallel over MPI, from a job queue that stops each run once it converges. Results include force coefficients (Cd, Cl, Cm), residual plots, case comparison and a printable report. Built-in studies cover parameter sweeps, mesh independence, aircraft polars, and neutral point and static margin. The source code is on GitHub under GPL-3.0: <a class=\"link\" href=\"https://github.com/BiscuitIV/PIFOAMUI\" target=\"_blank\" rel=\"noopener\">github.com/BiscuitIV/PIFOAMUI ↗</a>",
-            { figure: "cfd" },
-            { heading: "Performance" },
-            "The first generation weighed 263g and flew for about three seconds. The Predecessor weighs 216g, 47g lighter, about 18% less weight. Level flight speed was 10.1 m/s for Generation Nine and is 8.34 m/s so far for Generation X, against a cruise target of 7 m/s. The next step is further aerodynamic revision to reduce the cruise speed. [Flight time for the Predecessor and additional performance figures to be added.]"
+            { heading: "CFD with PIFOAMUI" },
+            "The streamlining of both bodies was guided by CFD run through PIFOAMUI, a browser interface I built for OpenFOAM 13, the open-source CFD toolkit. It makes aerodynamic changes quick enough to test between builds, instead of writing OpenFOAM dictionaries and setting up each case by hand. So far, CFD has been run at level flight to compare Generation Nine with Generation X.",
+            { list: [
+                "<strong>Setup</strong> an STL and flow conditions: speed, angle of attack and yaw, ground, and half models on a symmetry plane, in Basic, Intermediate or Advanced mode",
+                "<strong>Meshing</strong> blockMesh and snappyHexMesh, with boundary layers sized by thickness or a y+ target; checkMesh quality check, retried at a finer level if meshing fails",
+                "<strong>Solving</strong> steady (SIMPLE) or transient (PIMPLE), with Spalart–Allmaras, k-ω SST or γ-Reθ turbulence models, in parallel over MPI, from a job queue that stops each run once it converges",
+                "<strong>Results</strong> force coefficients (Cd, Cl, Cm), residual plots, case comparison and a printable report",
+                "<strong>Studies</strong> parameter sweeps, mesh independence, aircraft polars, and neutral point and static margin",
+                "<strong>Stack</strong> a single Python file using only the standard library, so it serves its own page with no dependencies or build step"
+            ] },
+            "The source code is on GitHub under GPL-3.0: <a class=\"link\" href=\"https://github.com/BiscuitIV/PIFOAMUI\" target=\"_blank\" rel=\"noopener\">github.com/BiscuitIV/PIFOAMUI</a>",
+            { heading: "Custom ESC" },
+            "The first custom PCB is the ESC, designed from scratch in KiCad to drive the 2003.5 motor on 2S to 3S at up to 15A. Commutation is sensorless: each phase's back-EMF is compared against a virtual neutral, so the motor needs no Hall sensors.",
+            { list: [
+                "<strong>Control</strong> STM32G0 microcontroller, powered by a TLV70433 3.3V regulator",
+                "<strong>Power stage</strong> FD6288T three-phase gate driver switching six MOSFETs as three half-bridges, with BAT54W bootstrap diodes supplying the high-side gates",
+                "<strong>Sensing</strong> back-EMF scaled through 10k/4.7k dividers; motor current from a 1mΩ shunt and INA181A3 amplifier; battery voltage from a divider",
+                "<strong>Input</strong> 470µF bulk capacitor with ceramic decoupling",
+                "<strong>Interfaces</strong> signal and telemetry pins, SWD for programming, and test points on every key net"
+            ] },
+            { media: [{ src: "lws-x/ESC%20V1%20Schematic.png", width: 2339, height: 1654,
+                alt: "LWS X ESC V1 schematic: BEMF sensing, current sense, gate driver, LDO, MCU, power input, voltage sense, three half-bridges, connections and test points" }],
+                caption: `LWS X ESC V1 schematic, KiCad · click to enlarge · <a class="link" href="lws-x/ESC%20V1%20Schematic.pdf" target="_blank" rel="noopener">PDF</a>` },
+            { heading: "Structure and Propulsion" },
+            "<strong>Airframe.</strong> Generation X splits the airframe into a front body and a rear body, joined by frame plates, so each body can be streamlined without compromising the joint between them. It is built from PLA and balsa, with carbon fibre under consideration. The wing moves from the first generation's 100mm chord at 0° incidence to a 110mm chord at 5°, and each of its two halves is 486mm wide.",
+            "<strong>Propulsion and power.</strong> A 2003.5 motor on a 2S to 3S 15A ESC drives a 7-inch 7x4.5 bi-blade propeller, up from the 6-inch propeller of the first three generations. The 2S 1200mAh battery stores about 8.9Wh for 56g: roughly 67% more energy than the earlier 2S 720mAh pack for 53% more weight. Custom PCBs replace off-the-shelf boards to save weight, and a flight controller is being added for more automation.",
+            { media: [{ src: "lws-x/Airfoil.png", width: 1447, height: 675, alt: "CAD render of a wing rib with lightening cutouts" }],
+                caption: "Wing rib, CAD render, with lightening cutouts · click to enlarge" },
+            { heading: "Development History" },
+            "I had never flown an RC plane when the project began, so the early generations were as much about learning to fly as about the aircraft. Every revision was crash-tested, and the rule that came out of them still drives the design: remove weight wherever it does not serve flight.",
+            { figure: "timeline" },
+            "<strong>Gen 1 · Tube glider.</strong> The first prototype used carbon fibre tubes for the wing and fuselage, so components could be repositioned to balance it. It was built within a month, crashed three times on a rough asphalt runway, and at 263g was already over the target; its tube fuselage lacked the stiffness to fly well.",
+            { media: [
+                { src: "lws-x/IMG20240903231440.jpg", width: 755, height: 1007, alt: "First-generation tube glider assembled on the floor, with 3D-printed ribs on carbon tubes, motor and landing gear" },
+                { src: "lws-x/web/gen1-v1-overview.mp4", width: 720, height: 1280, alt: "Walk-around of the first-generation glider: motor, landing gear, ribs, servos and tail" },
+                { src: "lws-x/web/gen1-v1-test.mp4", width: 720, height: 1280, alt: "Overhead ground test of the first-generation glider with its covered wing" }
+            ], caption: "Generation 1, the tube glider: assembled airframe, walk-around and ground test" },
+            "<strong>Gens 4–8 · Two-piece frame.</strong> Generations Four to Eight moved to a two-piece frame, one piece per side with the components housed inside, tested in cardboard, balsa and carbon fibre. Over those revisions a flap linkage replaced the string-and-pulley servo system, the wing mount became adjustable, a 2207 motor and 5g servos replaced the originals, and the ESC and receiver were stripped down.",
+            { media: [{ src: "lws-x/IMG20250119132358.jpg", width: 755, height: 1007, alt: "Blue 3D-printed tail surface with an integrated servo mount, held in hand" }],
+                caption: "3D-printed tail surface with integrated servo mount, two-piece frame era, January 2025 · click to enlarge" },
+            "<strong>Gen 9 · The Predecessor.</strong> Its balsa frame finally gave the right balance of stiffness and weight, bringing the plane under 250g at 216g.",
+            { media: [
+                { src: "lws-x/IMG20260624213924.jpg", width: 713, height: 951, alt: "The Predecessor mid-build on a table: red-covered wing, balsa frame, printed tail parts and transmitter" },
+                { src: "lws-x/IMG20260806213745.jpg", width: 713, height: 951, alt: "The Predecessor held in one hand, ready for a hand launch" }
+            ], caption: "The Predecessor: wing and balsa frame mid-build, and ready for hand launch · click to enlarge" },
+            { media: [{ src: "lws-x/web/gen9-flight.mp4", width: 1280, height: 720, alt: "Flight test of the Predecessor over a park field at dusk" }],
+                caption: "The Predecessor in flight" },
+            { media: [{ src: "lws-x/parts.jpg", width: 1600, height: 1067, alt: "Flat lay of 3D-printed parts from successive LWS generations, including frame plates, mounts and wheels" }],
+                caption: "3D-printed parts from successive LWS generations · click to enlarge" },
+            { heading: "Performance and Next Steps" },
+            { list: [
+                "<strong>Mass</strong> 263g in the first generation → 216g in the Predecessor, 47g or about 18% lighter",
+                "<strong>Level flight</strong> 10.1 m/s for Generation Nine → 7.83 m/s so far for Generation X, against a cruise target of 7 m/s",
+                "<strong>Next</strong> further aerodynamic revision to bring the cruise speed down"
+            ] }
+        ]
+    },
+    "over-the-years": {
+        title: "Over the Years",
+        date: "2022-2026",
+        video: "",
+        text: [
+            "<strong>Over the Years</strong> looks back at how my experience has grown across the disciplines I work in. [Introduction to be added.]",
+            { heading: "Mechanical Design and CAD" },
+            "[SolidWorks, Onshape and KiCad: where it started and how it developed.]",
+            { heading: "Fabrication" },
+            "[3D printing (FDM and MSLA, 500+ hours), laser cutting and soldering.]",
+            { heading: "Electronics" },
+            "[Circuits, PCB design and battery systems.]",
+            { heading: "Aerodynamics and Flight" },
+            "[RC aircraft, flying and simulation.]",
+            { heading: "Programming" },
+            "[MATLAB, Arduino, Betaflight and Claude Code.]",
+            { heading: "Leadership and Teaching" },
+            "[Leading the d.Aviation mechanical team, camps and tutoring.]"
         ]
     }
 };
@@ -144,13 +235,47 @@ const contact = [
 const projectKeys = Object.keys(projects);
 const drawingNumber = key => String(projectKeys.indexOf(key) + 1).padStart(2, "0");
 
-// ---------- Project text: strings are paragraphs, { heading } a subheading, { figure: name } a figure ----------
+// ---------- Project text: strings are paragraphs, { heading } a numbered subheading, { list: [html] } a bullet list,
+// { figure: name } a figure, { media: [{ src, width, height, alt }], caption } a row of photos and clips ----------
 function makeFigure(plateClass, plateHTML, caption) {
     const fig = document.createElement("figure");
     fig.className = "fig";
     fig.innerHTML = `<div class="fig-plate grid-paper ${plateClass}">${plateHTML}</div><figcaption class="mono muted">${caption}</figcaption>`;
     return fig;
 }
+
+// Muted clips play while at least half on screen; reduced motion leaves them to their controls
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+const clipPlayer = new IntersectionObserver(entries => entries.forEach(({ target, isIntersecting }) => {
+    if (isIntersecting && !reduceMotion.matches) target.play().catch(() => {});
+    else target.pause();
+}), { threshold: 0.5 });
+
+// Photo/video plate: one row, columns sized by aspect ratio so every item is the same height.
+// Images open full size on click; .mp4 items take their poster from the same name with .jpg
+function mediaFigure(items, caption) {
+    const ratio = ({ width, height }) => width / height;
+    const cells = items.map(({ src, width, height, alt }) => src.endsWith(".mp4")
+        ? `<video class="fig-img" src="${src}" poster="${src.replace(/\.mp4$/, ".jpg")}" width="${width}" height="${height}"
+            muted loop playsinline controls preload="none" aria-label="${alt}"></video>`
+        : `<a href="${src}" target="_blank" rel="noopener">
+            <img class="fig-img" src="${src}" width="${width}" height="${height}" loading="lazy" alt="${alt}">
+        </a>`).join("");
+    const fig = makeFigure("photo", `
+        <div class="fig-media" style="grid-template-columns: ${items.map(i => `${ratio(i)}fr`).join(" ")}">${cells}</div>`, caption);
+    fig.classList.add("has-media");
+    fig.style.setProperty("--aspect", items.reduce((sum, i) => sum + ratio(i), 0));
+    fig.querySelectorAll("video").forEach(v => clipPlayer.observe(v));
+    return fig;
+}
+
+// Timeline plate: [no, name, detail, result] step rows
+const stepRows = steps => `
+    <ol class="pipe-steps">${steps.map(([no, name, detail, result]) => `
+        <li><span class="mono-data muted">${no}</span>
+        <span class="pipe-step"><span class="title">${name}</span><span class="mono-data muted">${detail}</span></span>
+        <span class="mono-data pipe-result">${result}</span></li>`).join("")}
+    </ol>`;
 
 // Round tick values covering [min, max] in about `count` steps
 function niceTicks(min, max, count) {
@@ -343,83 +468,18 @@ const figures = {
         return fig;
     },
 
-    // The batch XFoil pipeline (software chain) and the five selection steps it served
-    pipeline() {
-        const chain = [
-            ["Airfoil databases", "airfoiltools · UIUC · AeroSandbox"],
-            ["run_polars.py", "Selig format · blunt trailing edges closed"],
-            ["XFoil 6.99", "Re 60,000 · Ncrit 9 · 160 panels"],
-            ["results.json", "polars + cruise-window metrics"],
-            ["Ranking tool", "sort, filter and compare polars"]
-        ];
-        const stats = [
-            ["Airfoils", "275"],
-            ["Converged points", "21,023"],
-            ["Trailing edges closed", "27"],
-            ["α sweep", "−5° to 15°, 0.25° steps"]
-        ];
-        const steps = [
-            ["Reynolds number", "8 m/s level flight · 110 mm chord · 0–150 m ISA", "Re 60,000"],
-            ["Goal metric", "best Cl/Cd for α 0–5°, the cruise window", "Cl/Cd, 0–5°"],
-            ["Camber and thickness", "range of cambers · max thickness > 8 mm", "275 airfoils"],
-            ["Polars at optimal α", "Cl, Cl/Cd and drag polar at each foil's best α", "273 ranked"],
-            ["Fabrication and metrics", "10.3 mm thick · 5.7% camber · Cl/Cd 43.7 @ 4.75°", "I.S.A. 960"]
+    // One row per generation, the current design last (its result in red)
+    timeline() {
+        const gens = [
+            ["1", "Tube glider", "carbon fibre tube wing and fuselage · E205, 100 mm chord, 0° · 2814 motor, 32 g ESC", "263 g · ~3 s flight"],
+            ["4–8", "Two-piece frame", "tube or balsa halves · flap linkage · adjustable wing mount · 2207 motor · 5 g servos", "flights of seconds"],
+            ["9", "The Predecessor", "balsa frame · 10 g ESC", "216 g · 10.1 m/s level"],
+            ["X", "Front and rear body", "PLA and balsa · I.S.A. 960, 110 mm chord, 5° · custom PCBs", "210 g target · 7.83 m/s level"]
         ];
         return makeFigure("pipe", `
-            <p class="mono muted pipe-head">Software</p>
-            <ol class="cells pipe-chain">${chain.map(([name, detail], i) => `
-                <li><span class="mono-data muted">${String(i + 1).padStart(2, "0")}</span>
-                <span class="title">${name}</span><span class="mono-data muted">${detail}</span></li>`).join("")}
-            </ol>
-            <dl class="cells re-values pipe-stats">${stats.map(([k, v]) => `
-                <div><dt class="mono-data muted">${k}</dt><dd class="mono-data">${v}</dd></div>`).join("")}
-            </dl>
-            <p class="mono muted pipe-head">Selection</p>
-            <ol class="pipe-steps">${steps.map(([name, detail, result], i) => `
-                <li><span class="mono-data muted">${i + 1}</span>
-                <span class="pipe-step"><span class="title">${name}</span><span class="mono-data muted">${detail}</span></span>
-                <span class="mono-data pipe-result">${result}</span></li>`).join("")}
-            </ol>`,
-            "Airfoil selection pipeline, a batch XFoil run over 275 airfoils");
-    },
-
-    // PIFOAMUI: the case workflow it automates and what it covers
-    cfd() {
-        const chain = [
-            ["STL part", "flow speed · α · yaw · ground"],
-            ["Mesh", "blockMesh + snappyHexMesh · boundary layers"],
-            ["checkMesh", "quality report · finer-level retry"],
-            ["Solve", "SIMPLE or PIMPLE · MPI · job queue"],
-            ["Results", "Cd · Cl · Cm · residuals · report"]
-        ];
-        const stats = [
-            ["Turbulence", "SA · k-ω SST · γ-Reθ"],
-            ["Studies", "sweeps · mesh independence · polars"],
-            ["Stack", "Python 3 stdlib · OpenFOAM 13"],
-            ["Modes", "Basic · Intermediate · Advanced"]
-        ];
-        return makeFigure("pipe", `
-            <p class="mono muted pipe-head">Workflow</p>
-            <ol class="cells pipe-chain">${chain.map(([name, detail], i) => `
-                <li><span class="mono-data muted">${String(i + 1).padStart(2, "0")}</span>
-                <span class="title">${name}</span><span class="mono-data muted">${detail}</span></li>`).join("")}
-            </ol>
-            <dl class="cells re-values pipe-stats">${stats.map(([k, v]) => `
-                <div><dt class="mono-data muted">${k}</dt><dd class="mono-data">${v}</dd></div>`).join("")}
-            </dl>`,
-            `PIFOAMUI workflow, a browser GUI for OpenFOAM 13 · <a class="link" href="https://github.com/BiscuitIV/PIFOAMUI" target="_blank" rel="noopener">GitHub ↗</a>`);
-    },
-
-    // KiCad schematic as a 200 dpi render; clicking it opens the full-size image, the caption links the vector PDF
-    esc() {
-        const png = "ESC%20V1%20Schematic.png";
-        const pdf = "ESC%20V1%20Schematic.pdf";
-        return makeFigure("esc", `
-            <a href="${png}" target="_blank" rel="noopener">
-                <img class="esc-img" src="${png}" width="2339" height="1654" loading="lazy"
-                    alt="LWS X ESC V1 schematic: BEMF sensing, current sense, gate driver, LDO, MCU, power input, voltage sense, three half-bridges, connections and test points">
-            </a>`,
-            `LWS X ESC V1 schematic, KiCad · click to enlarge · <a class="link" href="${pdf}" target="_blank" rel="noopener">PDF</a>`);
+            <p class="mono muted pipe-head">Generation</p>
+            ${stepRows(gens)}`,
+            "LWS generations, from the first tube glider to Generation X");
     },
 
     // Every foil in the batch run: thickness against the cruise metric, the chosen foil highlighted
@@ -575,13 +635,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const frameWrap = $("frame-wrap");
     const frame = $("frame");
     const featuredVideo = $("featured-video");
-    const caption = $("video-text");
-    const idleCaption = matchMedia("(hover: hover)").matches ? "Hover a part to preview" : "Tap a part to open";
 
     let videoTimeout;
     let previewToken = 0;
-
-    caption.textContent = idleCaption;
 
     function clearVideo(video) {
         video.pause();
@@ -611,7 +667,7 @@ document.addEventListener("DOMContentLoaded", function () {
         $("tb-date").textContent = info ? info.date : "2026";
     }
 
-    // PREVIEW (shared by project rows and resume entries)
+    // PREVIEW (shared by project rows and experience roles)
     const card = $("frame-card");
 
     function activatePanel(info) {
@@ -630,8 +686,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function fillCard(meta, title, body, caption) {
         $("card-meta").textContent = meta;
         $("card-title").textContent = title;
-        $("card-body").replaceChildren(body);
+        $("card-body").replaceChildren(...body);
         $("card-caption").textContent = caption;
+        $("card-caption").hidden = !caption;
     }
 
     function fillProjectCard(key, excerptText) {
@@ -639,7 +696,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const excerpt = document.createElement("p");
         excerpt.className = "card-excerpt";
         excerpt.textContent = excerptText;
-        fillCard(`Dwg no. ${drawingNumber(key)} · ${proj.date}`, proj.title, excerpt, "No render on file · Open →");
+        fillCard(`Dwg no. ${drawingNumber(key)} · ${proj.date}`, proj.title, [excerpt], "Open →");
     }
 
     function showPreview(key) {
@@ -684,35 +741,48 @@ document.addEventListener("DOMContentLoaded", function () {
         videoTimeout = setTimeout(() => clearVideo(featuredVideo), 300);
     }
 
-    // Resume entry: the row's own body (bullets or description) is the single source for the card
-    function showEntry(entry) {
-        const years = entry.closest("dd").previousElementSibling.textContent;
-        const title = entry.querySelector(".entry-title").textContent;
-        const org = entry.querySelector(".entry-meta");
+    // Experience role: the row's full dates, organisation and bullets are the single source for the card
+    function showRole(row) {
+        const years = row.querySelector("dt").textContent;
+        const title = row.querySelector(".entry-title").textContent;
 
         activatePanel({ title, no: "—", date: years });
         fillCard(
-            org ? `${years} · ${org.textContent}` : years,
+            `${row.dataset.dates} · ${row.querySelector(".entry-meta").textContent}`,
             title,
-            entry.querySelector(":scope > :not(summary)").cloneNode(true),
-            entry.open ? "Click row to collapse" : "Click row to expand"
+            [row.querySelector(".entry-points").cloneNode(true)],
+            ""
         );
         card.hidden = false;
         clearVideo(featuredVideo);
     }
 
-    document.querySelectorAll("details.entry").forEach(entry => {
-        const summary = entry.querySelector("summary");
-        // The whole row (date column and spacing included) is the hover target, so rows tile without gaps
-        const row = entry.closest("dd").parentElement;
-        row.addEventListener("mouseenter", () => showEntry(entry));
-        row.addEventListener("mouseleave", hidePreview);
-        summary.addEventListener("focus", () => showEntry(entry));
-        summary.addEventListener("blur", hidePreview);
-        // Keep the caption's expand/collapse hint in sync while the row is active
-        entry.addEventListener("toggle", () => {
-            if (row.matches(":hover, :focus-within")) showEntry(entry);
+    // Role bullets move into the panel only where it can show them: a hover pointer and a frame tall enough
+    // for the longest role (Apperture's four bullets need about 1320x640). Touch, narrow or short screens,
+    // and no-JS, keep the bullets in the row.
+    const roles = document.querySelector(".roles");
+    const roleRows = roles.querySelectorAll(":scope > div");
+    const hoverDetails = matchMedia("(hover: hover) and (min-width: 1320px) and (min-height: 640px)");
+
+    function syncHoverDetails() {
+        roles.classList.toggle("hover-details", hoverDetails.matches);
+        // Rows without an organisation link still need a keyboard stop to open their card
+        roleRows.forEach(row => {
+            if (hoverDetails.matches) row.tabIndex = 0;
+            else row.removeAttribute("tabindex");
         });
+    }
+
+    hoverDetails.addEventListener("change", syncHoverDetails);
+    syncHoverDetails();
+
+    // The whole row (date column and spacing included) is the hover target, so rows tile without gaps
+    roleRows.forEach(row => {
+        const show = () => { if (hoverDetails.matches) showRole(row); };
+        row.addEventListener("mouseenter", show);
+        row.addEventListener("mouseleave", hidePreview);
+        row.addEventListener("focusin", show);
+        row.addEventListener("focusout", hidePreview);
     });
 
     // GENERATE INDEX
@@ -724,7 +794,7 @@ document.addEventListener("DOMContentLoaded", function () {
         link.href = `#${key}`;
         link.innerHTML = `
             <span class="mono muted part-no">${drawingNumber(key)}</span>
-            <span class="title title-md link">${proj.title}</span>
+            <span><span class="title title-md link">${proj.title}</span>${proj.subtitle ? `<span class="muted entry-meta">${proj.subtitle}</span>` : ""}</span>
             <span class="mono muted">${proj.date}</span>
         `;
 
@@ -757,18 +827,47 @@ document.addEventListener("DOMContentLoaded", function () {
         hidePreview();
         document.title = `${proj.title} · Pavlos P`;
         $("project-title").textContent = proj.title;
+        $("project-subtitle").textContent = proj.subtitle || "";
+        $("project-subtitle").hidden = !proj.subtitle;
         $("project-no").textContent = drawingNumber(key);
-        $("spec-no").textContent = drawingNumber(key);
-        $("spec-date").textContent = proj.date;
-        $("spec-render").textContent = proj.video || proj.image ? "On file" : "None";
 
-        $("project-frame").hidden = !proj.video && !proj.image;
+        // Spec line: rows without a value are skipped
+        $("project-spec").replaceChildren(...[
+            ["Dwg no.", drawingNumber(key)],
+            ["Date", proj.date],
+            ["Role", proj.role],
+            ["Tools", proj.tools]
+        ].filter(([, value]) => value).map(([label, value]) => {
+            const row = document.createElement("div");
+            const dt = document.createElement("dt");
+            dt.className = "muted";
+            dt.textContent = label;
+            const dd = document.createElement("dd");
+            dd.textContent = value;
+            row.append(dt, dd);
+            return row;
+        }));
+
+        const results = $("project-results");
+        results.hidden = !proj.results;
+        // Each result: [value, plain-language label, detail]
+        results.innerHTML = (proj.results || []).map(([value, label, detail]) => `
+            <li><span class="title title-md">${value}</span><span class="result-label">${label}</span><span class="mono-data muted">${detail}</span></li>`).join("");
+
+        $("project-figure").hidden = !proj.video && !proj.image;
         projectImage.hidden = !proj.image;
         if (proj.image) {
-            projectImage.src = proj.image;
+            projectImage.src = proj.image.src;
+            projectImage.alt = proj.image.alt;
         } else {
             projectImage.removeAttribute("src");
+            projectImage.alt = "";
         }
+        const caption = proj.image ? proj.image.caption : "";
+        $("project-caption").textContent = caption;
+        $("project-caption").hidden = !caption;
+        // An empty <video controls> would paint a black player behind the image
+        projectVideo.hidden = !proj.video;
         if (proj.video) {
             projectVideo.src = proj.video;
             projectVideo.play().catch(() => {});
@@ -781,18 +880,33 @@ document.addEventListener("DOMContentLoaded", function () {
         if (proj.specs) renderSpecs(specs, proj.specs);
 
         const descContainer = $("project-description-container");
+        clipPlayer.disconnect();
         descContainer.innerHTML = "";
         let figNo = 0;
+        const sections = [];
         proj.text.forEach(item => {
             if (item.heading) {
                 const h = document.createElement("h3");
                 h.className = "subhead";
-                h.textContent = item.heading;
+                h.tabIndex = -1;
+                const no = document.createElement("span");
+                no.className = "mono muted subhead-no";
+                no.textContent = String(sections.length + 1).padStart(2, "0");
+                h.append(no, item.heading);
+                sections.push({ h, no: no.textContent, title: item.heading });
                 descContainer.appendChild(h);
                 return;
             }
-            if (item.figure) {
-                const fig = figures[item.figure]();
+            if (item.list) {
+                const ul = document.createElement("ul");
+                ul.className = "prose-list";
+                // innerHTML allows the <strong> labels in the project data
+                ul.innerHTML = item.list.map(li => `<li>${li}</li>`).join("");
+                descContainer.appendChild(ul);
+                return;
+            }
+            if (item.figure || item.media) {
+                const fig = item.figure ? figures[item.figure]() : mediaFigure(item.media, item.caption);
                 fig.querySelector("figcaption").prepend(`Fig. ${++figNo} — `);
                 descContainer.appendChild(fig);
                 return;
@@ -802,6 +916,29 @@ document.addEventListener("DOMContentLoaded", function () {
             p.innerHTML = item;
             descContainer.appendChild(p);
         });
+
+        // Contents: buttons rather than #anchors, since the hash selects the project
+        if (sections.length >= 3) {
+            const nav = document.createElement("nav");
+            nav.className = "toc";
+            nav.setAttribute("aria-label", "Contents");
+            nav.innerHTML = `<p class="mono muted section-head">Contents</p><ol class="toc-list"></ol>`;
+            nav.querySelector("ol").append(...sections.map(({ h, no, title }) => {
+                const li = document.createElement("li");
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = "toc-item";
+                button.innerHTML = `<span class="mono muted">${no}</span><span class="link"></span>`;
+                button.lastChild.textContent = title;
+                button.addEventListener("click", () => {
+                    h.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth" });
+                    h.focus({ preventScroll: true });
+                });
+                li.append(button);
+                return li;
+            }));
+            descContainer.insertBefore(nav, sections[0].h);
+        }
 
         window.scrollTo(0, 0);
     }

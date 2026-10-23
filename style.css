@@ -73,9 +73,6 @@ a { color: inherit; text-decoration: none; }
     border-radius: 2px;
 }
 
-summary { list-style: none; cursor: pointer; }
-summary::-webkit-details-marker { display: none; }
-
 /* ---------- Primitives: every component composes these ---------- */
 
 /* Text voices: mono labels (uppercase), mono data (case kept for units like mm, mAh, ρ), serif titles */
@@ -125,7 +122,10 @@ summary::-webkit-details-marker { display: none; }
 }
 
 .link:is(:hover, :focus-visible),
-:is(a, summary):is(:hover, :focus-visible) > .link { text-decoration-color: var(--accent); }
+:is(a, button):is(:hover, :focus-visible) .link { text-decoration-color: var(--accent); }
+
+/* Text links that leave the page (sites, email, files) get a diagonal arrow, hidden from screen readers */
+a.link:not([href^="#"])::after { content: "\2009\2197"; content: "\2009\2197" / ""; }
 
 /* Label/value list; optional <div> rows span both columns via subgrid */
 .kv {
@@ -174,7 +174,7 @@ summary::-webkit-details-marker { display: none; }
 
 /* ---------- Home: left column ---------- */
 .sheet-left {
-    width: 38%;
+    width: 45%;
     min-height: 100vh;
     padding: var(--s-7);
     display: flex;
@@ -195,25 +195,54 @@ summary::-webkit-details-marker { display: none; }
 .entry-meta { display: block; }
 .entry-desc { display: block; margin-top: var(--s-1); }
 
-/* Entry marker (+ closed, − open); inline-block keeps the title's underline off it */
-.entry > summary .entry-title::after {
-    content: "+";
-    display: inline-block;
-    margin-left: var(--s-2);
-    font-family: var(--mono);
-    font-size: var(--t-12);
-    font-style: normal;
-    color: var(--accent);
-}
-
-.entry[open] > summary .entry-title::after { content: "\2212"; }
-
 .entry-points {
     margin: var(--s-1) 0 0;
     padding-left: var(--s-5);
 }
 
 .entry-points li::marker { color: var(--accent); }
+
+/* Hover details (class set by script.js): role bullets move into the panel card and stay readable by screen readers;
+   a cue under each role says to hover and, once active, where the details went */
+.roles.hover-details .entry-points {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.roles.hover-details dd::after {
+    content: "Hover for details \2192";
+    content: "Hover for details \2192" / "";
+    display: block;
+    margin-top: var(--s-1);
+    font-family: var(--mono);
+    font-size: var(--t-12);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    transition: color var(--dur) var(--ease);
+}
+
+/* Rows are focusable here (script.js adds tabindex): they bleed sideways so an inset ring clears the text and the row above */
+.roles.hover-details > div {
+    margin-inline: calc(-1 * var(--s-2));
+    padding-inline: var(--s-2);
+}
+
+.roles.hover-details > div:focus-visible { outline-offset: -2px; }
+
+.roles.hover-details dt { transition: color var(--dur) var(--ease); }
+
+.roles.hover-details > div:is(:hover, :focus-within) dt { color: var(--accent); }
+
+.roles.hover-details > div:is(:hover, :focus-within) dd::after {
+    content: "Shown at right \2192";
+    content: "Shown at right \2192" / "";
+    color: var(--accent);
+}
 
 .tags {
     display: flex;
@@ -249,7 +278,7 @@ summary::-webkit-details-marker { display: none; }
     position: fixed;
     top: 0;
     right: 0;
-    width: 62%;
+    width: 55%;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -294,7 +323,7 @@ summary::-webkit-details-marker { display: none; }
 .frame-label,
 .frame-caption { margin: 0; }
 
-/* Idle state: about notes. Preview state: video or spec card. */
+/* Idle state: the featured project. Preview state: video or spec card. */
 .frame-note,
 .frame-card {
     position: absolute;
@@ -308,23 +337,37 @@ summary::-webkit-details-marker { display: none; }
 .frame-note { transition: opacity var(--dur) var(--ease); }
 .frame.has-preview .frame-note { opacity: 0; }
 
-.notes {
-    max-width: 44ch;
-    margin: 0;
-    padding-left: var(--s-5);
-    display: flex;
-    flex-direction: column;
-    gap: var(--s-2);
-}
-
-.notes li::marker { font-family: var(--mono); font-size: var(--t-12); color: var(--accent); }
-
 .frame-note .frame-caption,
 .frame-card .frame-caption { margin-top: auto; }
+
+/* Featured photo fills the frame; its caption is a ruled paper label */
+.frame-featured { padding: var(--s-4); }
+
+.frame-featured img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.frame-featured .frame-caption {
+    position: relative;
+    align-self: flex-start;
+    padding: var(--s-1) var(--s-2);
+    border: var(--line);
+    background: var(--paper);
+    transition: color var(--dur) var(--ease);
+}
+
+.frame-featured:is(:hover, :focus-visible) .frame-caption { color: var(--accent); }
+/* The frame clips overflow, so the focus ring sits inside it */
+.frame-featured:focus-visible { outline-offset: calc(-1 * var(--s-1)); }
 
 .card-title { margin: 0; }
 
 .card-body { max-width: 52ch; }
+.card-body .frame-label { margin-bottom: var(--s-2); }
 
 .card-excerpt {
     margin: 0;
@@ -438,11 +481,13 @@ summary::-webkit-details-marker { display: none; }
 .project-foot { margin-top: auto; border-top: var(--line); }
 .project-foot .contact-links { color: var(--ink); }
 
-.project-title {
-    margin: 0;
+.project-head {
     padding: var(--s-8) 0 var(--s-7);
     border-bottom: var(--line-soft);
 }
+
+.project-title { margin: 0; }
+.project-subtitle { margin: var(--s-4) 0 0; }
 
 .project-grid {
     display: grid;
@@ -460,14 +505,71 @@ summary::-webkit-details-marker { display: none; }
 .spec > div { display: flex; gap: var(--s-2); }
 .spec dd { margin: 0; }
 
-.project-frame { margin-bottom: var(--s-7); }
+/* Key results: ruled cells, value over a plain-language label over the mono detail */
+.results {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 0 var(--s-7);
+    list-style: none;
+}
+
+.results li {
+    flex: 1 1 140px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1);
+    padding: var(--s-3);
+}
+
+.result-label { line-height: 1.25; }
+
+.project-figure { margin: 0 0 var(--s-7); }
+.project-figure figcaption { margin-top: var(--s-2); }
 .project-frame video { opacity: 1; }
 .project-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 
 .prose { max-width: 62ch; margin-inline: auto; }
 
 .prose p { margin: 0 0 var(--s-5); line-height: 1.6; }
-.prose .subhead { margin: var(--s-7) 0 var(--s-3); }
+.prose .subhead { margin: var(--s-7) 0 var(--s-3); scroll-margin-top: var(--s-5); }
+
+/* Section number sits above the heading, matching the contents list */
+.subhead-no { display: block; margin-bottom: var(--s-1); }
+
+/* Scannable lists: red-pencil markers, small-caps <strong> labels lead each item */
+.prose-list { margin: 0 0 var(--s-5); padding-left: var(--s-5); }
+.prose-list li + li { margin-top: var(--s-2); }
+.prose-list li::marker { color: var(--accent); }
+
+/* Contents: numbered section buttons in two columns */
+.toc { margin: var(--s-6) 0 0; }
+
+.toc-list {
+    columns: 2;
+    column-gap: var(--s-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.toc-list li { break-inside: avoid; }
+
+.toc-item {
+    display: flex;
+    gap: var(--s-3);
+    align-items: baseline;
+    width: 100%;
+    padding: var(--s-1) 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.toc-item .mono { transition: color var(--dur) var(--ease); }
+.toc-item:is(:hover, :focus-visible) .mono { color: var(--accent); }
 
 /* Links inside running text and captions keep their underline, or they read as plain words */
 .prose :is(p, figcaption) .link { color: var(--accent); text-decoration-color: currentColor; }
@@ -540,9 +642,15 @@ summary::-webkit-details-marker { display: none; }
 /* Plain paper: the drafting grid would compete with the chart gridlines */
 .fig-plate.polars { background: var(--paper); }
 
-/* ESC schematic: the render fills the plate edge to edge */
-.fig-plate.esc { padding: 0; background: var(--paper); }
-.esc-img { display: block; width: 100%; height: auto; cursor: zoom-in; }
+/* Photos and renders fill the plate edge to edge */
+.fig-plate.photo { padding: 0; background: var(--paper); }
+.fig-img { display: block; width: 100%; height: auto; cursor: zoom-in; }
+video.fig-img { cursor: auto; }
+
+/* Media rows: ink gutters between items, like .cells; --aspect (summed width/height, set by script.js)
+   caps the row at about 560px tall, so a lone portrait doesn't fill the column */
+.fig-media { display: grid; gap: 1px; background: var(--ink); }
+.fig.has-media { max-width: calc(560px * var(--aspect)); margin-inline: auto; }
 
 .fig-legend-row { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); margin: 0 0 var(--s-4); }
 
@@ -608,28 +716,8 @@ summary::-webkit-details-marker { display: none; }
 .sweep-hover { fill: none; stroke: var(--ink); stroke-width: 1.5; }
 .sweep-min { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 4 3; }
 
-/* Selection pipeline: software chain in ruled cells, then the numbered steps */
+/* Generation timeline: numbered step rows */
 .pipe-head { margin: 0 0 var(--s-2); color: var(--accent); }
-.pipe-head:not(:first-child) { margin-top: var(--s-6); }
-
-.pipe-chain {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0;
-    list-style: none;
-}
-
-.pipe-chain li {
-    flex: 1 1 140px;
-    display: flex;
-    flex-direction: column;
-    gap: var(--s-1);
-    padding: var(--s-3);
-}
-
-.pipe-chain li + li .title::before { content: "→ "; color: var(--accent); }
-
-.pipe-stats { margin-top: var(--s-3); }
 
 .pipe-steps { margin: 0; padding: 0; list-style: none; }
 
@@ -710,9 +798,10 @@ summary::-webkit-details-marker { display: none; }
     .title-block { width: 100%; }
 
     .project { padding: 0 var(--s-4); }
-    .project-title { padding: var(--s-7) 0 var(--s-6); }
+    .project-head { padding: var(--s-7) 0 var(--s-6); }
 
     .fig-plate { padding: var(--s-4); }
+    .toc-list { columns: 1; }
     .re-input { grid-template-columns: 1fr auto; gap: var(--s-1) var(--s-3); }
     .re-input input { grid-column: 1 / -1; grid-row: 2; }
     .pipe-steps li { grid-template-columns: var(--s-5) 1fr; }
